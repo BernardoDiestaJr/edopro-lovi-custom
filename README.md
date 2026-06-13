@@ -15,7 +15,7 @@ A repository of custom Yugioh cards scripted by Lovinauld, from Touhou to custom
 
 # How to Install the repository
 To begin installing this repository, edit the **config.json** file, which is typically located in the ***ProjectIgnis/configs*** folder.
-It is recommended to use **Notepad ++** or any software that can easily edit a .json file. Then, below the "repos" section of the file, create a new line and enter the following code:
+It is recommended to use **Notepad ++** or any software that can easily edit a .json file. Next, below the "repos" section of the file, create a new line and enter the following code:
 
 ```json
 		{
@@ -27,3 +27,6 @@ It is recommended to use **Notepad ++** or any software that can easily edit a .
 			"should_read": true
 		},
 ```
+Finally, open or restart EDOPro, wait for the files to download, and you should be able to start playing with the custom cards!
+
+**DON'T FORGET** to see the custom cards in the card catalogue, you must navigate to the Decks section and, in Deck editing, enable the **Alternate Formats** option.
