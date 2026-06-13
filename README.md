@@ -19,9 +19,9 @@ It is recommended to use **Notepad ++** or any software that can easily edit a .
 
 ```json
 		{
-			"url": "https://github.com/BernardoDiestaJr/edopro-customs",
-			"repo_name": "yanick-th",
-			"repo_path": "./repositories/yanick-th",
+			"url": "https://github.com/BernardoDiestaJr/edopro-lovi-custom",
+			"repo_name": "Lovinauld Custom Cards",
+			"repo_path": "./repositories/lovi-custom",
 			"lflist_path": ".",
 			"should_update": true,
 			"should_read": true
