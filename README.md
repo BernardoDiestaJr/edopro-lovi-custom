@@ -2,7 +2,8 @@
 
 A repository of custom Yugioh cards scripted by Lovinauld, from Touhou to custom archetypes for the EDOPro Simulator.
 
-# Archetypes
+# Custom Archetypes (Located at /cards-lovi.cdb)
+A variety of custom archetypes I have designed and scripted.
 - *"Fantasia"* - Is an archetype of cards based on the Touhou Project series, consisting of the following sub-archetypes:
   - *"Reimu the Eternal Shrine Maiden"* - This archetype includes "Reimu the Eternal Shrine Maiden," the main protagonist of the Touhou Project series, and her variants.
   - *"Divine Implement"* - Mainly consisting of spells, traps, and non-Illusion monsters, this archetype supports "Reimu the Eternal Shrine Maiden," "Onmyō," and "Fantasia" archetypes.
@@ -12,6 +13,13 @@ A repository of custom Yugioh cards scripted by Lovinauld, from Touhou to custom
 - *"Kyrio"* - Is an archetype of mostly level 12 Sea-Serpents.
 - *"Piscera"* - Is an archetype of mostly Flip Fish monsters based on the Early to Late Devonian Period, also known as the "Age of Fishes".
 - *"Umbriazic"* - Is an archetype of EARTH and DARK Dinosaur monsters.
+
+# Unofficial Fanmade Archetype Support Cards
+A collection of cards that directly or indirectly supports old or unplayable archetypes.
+- *"Gusto"*
+- *"Doll Monster"*
+- *"Worm"*
+- *"TBA"*
 
 # How to Install the repository
 To begin installing this repository, edit the **config.json** file, which is typically located in the ***ProjectIgnis/configs*** folder.
