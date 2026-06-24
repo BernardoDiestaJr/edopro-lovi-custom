@@ -14,7 +14,7 @@ A variety of custom archetypes I have designed and scripted.
 - *"Piscera"* - Is an archetype of mostly Flip Fish monsters based on the Early to Late Devonian Period, also known as the "Age of Fishes".
 - *"Umbriazic"* - Is an archetype of EARTH and DARK Dinosaur monsters.
 
-# Unofficial Fanmade Archetype Support Cards
+# Unofficial Fanmade Archetype Support Cards (Located at /cards-unofficial-support.cdb)
 A collection of cards that directly or indirectly supports old or unplayable archetypes.
 - *"Gusto"*
 - *"Doll Monster"*
