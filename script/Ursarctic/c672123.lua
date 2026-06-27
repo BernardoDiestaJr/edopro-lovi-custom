@@ -34,30 +34,27 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)	
 	--Add to your hand 1 "Ursarctic" card from your GY or that is banished
 	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(id,4))
+	e4:SetDescription(aux.Stringid(id,1))
 	e4:SetCategory(CATEGORY_TOHAND)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e4:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
 	e4:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e4:SetCountLimit(1)
+	e4:SetCountLimit(2,{id,1})
 	e4:SetTarget(s.thtg)
 	e4:SetOperation(s.thop)
 	c:RegisterEffect(e4)
 	local e5=e4:Clone()
 	e5:SetCode(EVENT_RELEASE)
 	c:RegisterEffect(e5)
-	--Negate an opponent's activated effect
+	--Other "Ursarctic" monsters you control cannot be destroyed by your opponent's card effects
 	local e6=Effect.CreateEffect(c)
-	e6:SetDescription(aux.Stringid(id,1))
-	e6:SetCategory(CATEGORY_DISABLE+CATEGORY_RELEASE)
-	e6:SetType(EFFECT_TYPE_QUICK_O)
-	e6:SetCode(EVENT_CHAINING)
+	e6:SetType(EFFECT_TYPE_FIELD)
+	e6:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
 	e6:SetRange(LOCATION_MZONE)
-	e6:SetCountLimit(1)
-	e6:SetCondition(function(e,tp,eg,ep,ev,re,r,rp) return rp==1-tp and (Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,0,LOCATION_HAND,1,nil,REASON_EFFECT,1-tp) or Duel.IsChainDisablable(ev)) end)
-	e6:SetTarget(s.distg)
-	e6:SetOperation(s.disop)
-	c:RegisterEffect(e6)	
+	e6:SetTargetRange(LOCATION_MZONE,0)
+	e6:SetTarget(function(e,c) return c~=e:GetHandler() and c:IsSetCard(SET_URSARCTIC) end)
+	e6:SetValue(aux.indoval)
+	c:RegisterEffect(e6)
 end
 
 s.listed_series={SET_URSARCTIC}
@@ -147,33 +144,5 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
 		Duel.SendtoHand(tc,tp,REASON_EFFECT)
-	end
-end
-
-function s.disfilter(c)
-	return c:IsMonster() and c:IsLevelBelow(7) and c:IsLocation(LOCATION_HAND) and c:IsDiscardable()
-end
-
-function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-	Duel.SetPossibleOperationInfo(0,CATEGORY_DISABLE,eg,1,0,0)
-	Duel.SetPossibleOperationInfo(0,CATEGORY_HANDES,nil,1,1-tp,1)
-end
-
-function s.disop(e,tp,eg,ep,ev,re,r,rp)
-	local b1=Duel.IsExistingMatchingCard(s.disfilter,tp,0,LOCATION_HAND,1,nil,REASON_EFFECT,1-tp)
-	local b2=Duel.IsChainDisablable(ev)
-	local op=nil
-	if b1 and b2 then
-		op=Duel.SelectEffect(1-tp,
-			{b1,aux.Stringid(id,3)},
-			{b2,aux.Stringid(id,4)})
-	else
-		op=(b1 and 1) or (b2 and 2)
-	end
-	if op==1 then
-		Duel.DiscardHand(1-tp,nil,1,1,REASON_EFFECT|REASON_DISCARD)
-	elseif op==2 then
-		Duel.NegateEffect(ev)
 	end
 end
