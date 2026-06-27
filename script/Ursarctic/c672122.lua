@@ -21,6 +21,7 @@ function s.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e3:SetProperty(EFFECT_FLAG_DELAY)
 	e3:SetCode(EVENT_RELEASE)
+	e3:SetCountLimit(1)
 	e3:SetTarget(s.ursatg)
 	e3:SetOperation(s.ursaop)
 	c:RegisterEffect(e3)	
@@ -42,7 +43,7 @@ end
 
 function s.remspop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_HAND,nil,tp,POS_FACEDOWN)
-	if #g==0 then return end
+	if #g==0 or not Duel.SelectYesNo(tp,aux.Stringid(id,2)) then return end
 	local rg=g:RandomSelect(tp,1)
 	if #rg>0 and Duel.Remove(rg,POS_FACEDOWN,REASON_EFFECT)>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
