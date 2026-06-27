@@ -53,7 +53,7 @@ function s.initial_effect(c)
 	e6:SetCode(EVENT_CHAINING)
 	e6:SetRange(LOCATION_MZONE)
 	e6:SetCountLimit(1)
-	e6:SetCondition(function(e,tp,eg,ep,ev,re,r,rp) return rp==1-tp and (Duel.IsExistingMatchingCard(Card.IsReleasable,tp,0,LOCATION_HAND,1,nil,REASON_EFFECT,1-tp) or Duel.IsChainDisablable(ev)) end)
+	e6:SetCondition(function(e,tp,eg,ep,ev,re,r,rp) return rp==1-tp and (Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,0,LOCATION_HAND,1,nil,REASON_EFFECT,1-tp) or Duel.IsChainDisablable(ev)) end)
 	e6:SetTarget(s.distg)
 	e6:SetOperation(s.disop)
 	c:RegisterEffect(e6)	
@@ -150,13 +150,13 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.disfilter(c)
-	return c:IsLevelBelow(7) and c:IsLocation(LOCATION_HAND) and c:IsReleasableByEffect()
+	return c:IsMonster() and c:IsLevelBelow(7) and c:IsLocation(LOCATION_HAND) and c:IsDiscardable()
 end
 
 function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetPossibleOperationInfo(0,CATEGORY_DISABLE,eg,1,0,0)
-	Duel.SetPossibleOperationInfo(0,CATEGORY_RELEASE,nil,1,1-tp,1)
+	Duel.SetPossibleOperationInfo(0,CATEGORY_HANDES,nil,1,1-tp,1)
 end
 
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
@@ -165,13 +165,13 @@ function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	local op=nil
 	if b1 and b2 then
 		op=Duel.SelectEffect(1-tp,
-			{b1,aux.Stringid(id,2)},
-			{b2,aux.Stringid(id,3)})
+			{b1,aux.Stringid(id,3)},
+			{b2,aux.Stringid(id,4)})
 	else
 		op=(b1 and 1) or (b2 and 2)
 	end
 	if op==1 then
-		Duel.Release(1-tp,nil,1,1,REASON_EFFECT,nil)
+		Duel.DiscardHand(1-tp,nil,1,1,REASON_EFFECT|REASON_DISCARD)
 	elseif op==2 then
 		Duel.NegateEffect(ev)
 	end
