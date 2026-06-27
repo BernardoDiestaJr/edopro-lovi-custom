@@ -29,6 +29,7 @@ function s.initial_effect(c)
 	e3:SetTargetRange(1,0)
 	e3:SetCondition(s.repcon)
 	e3:SetValue(s.repval)
+	e3:SetCountLimit(2,id)
 	e3:SetOperation(s.repop)
 	c:RegisterEffect(e3)	
 	--Add to your hand 1 "Ursarctic" card from your GY or that is banished
