@@ -124,7 +124,7 @@ function s.plcon(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.plfilter(c,tp)
-	return c:IsSetCard(SET_URSARCTIC) and c:IsContinuousTrap() and c:IsContinuousSpell() and not c:IsForbidden() and c:CheckUniqueOnField(tp)
+	return c:IsSetCard(SET_URSARCTIC) and c:IsContinuousTrap() and not c:IsForbidden() and c:CheckUniqueOnField(tp)
 end
 
 function s.pltg(e,tp,eg,ep,ev,re,r,rp,chk)
