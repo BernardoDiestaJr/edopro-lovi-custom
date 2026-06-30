@@ -28,6 +28,20 @@ function s.initial_effect(c)
 	e3:SetTarget(s.attg)
 	e3:SetOperation(s.atop)
 	c:RegisterEffect(e3)	
+	--Xyz Summon 1 DARK Xyz Monster using Level 4 monsters or Normal Monsters
+	local e4=Effect.CreateEffect(c)
+	e4:SetDescription(aux.Stringid(id,5))
+	e4:SetCategory(CATEGORY_TODECK+CATEGORY_SPECIAL_SUMMON)
+	e4:SetType(EFFECT_TYPE_QUICK_O)
+	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e4:SetCode(EVENT_CHAINING)
+	e4:SetRange(LOCATION_MZONE)
+	e4:SetCountLimit(1,{id,1})
+	e4:SetCost(Cost.DetachFromSelf(1))	
+	e4:SetTarget(s.xyztg)
+	e4:SetOperation(s.xyzop)
+	c:RegisterEffect(e4)
+	
 end
 
 s.listed_series={SET_RANK_UP_MAGIC}
@@ -71,5 +85,37 @@ function s.atop(e,tp,eg,ep,ev,re,r,rp)
 			Duel.HintSelection(oc,true)
 			Duel.Overlay(oc,tc)
 		end
+	end
+end
+
+function s.xyzfilter(c,e,tp,mmz_chk)
+	return (c:IsLevel(4) or c:IsType(TYPE_NORMAL) and c:IsLevelAbove(4)) and c:IsFaceup() and (c:IsAbleToDeck() or (mmz_chk and c:IsCanBeSpecialSummoned(e,0,tp,false,false)))
+end
+
+function s.xyztg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	local mmz_chk=Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.xyzfilter(chkc,e,tp,mmz_chk) end
+	if chk==0 then return Duel.IsExistingTarget(s.xyzfilter,tp,LOCATION_GRAVE,0,2,nil,e,tp,mmz_chk) end
+	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,6))
+	local g=Duel.SelectTarget(tp,s.xyzfilter,tp,LOCATION_GRAVE,0,2,2,nil,e,tp,mmz_chk)
+	Duel.SetPossibleOperationInfo(0,CATEGORY_TODECK,g,2,tp,0)
+	Duel.SetPossibleOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,2,tp,0)
+	if g:GetFirst():IsLocation(LOCATION_GRAVE) then
+		Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,g,2,tp,0)
+	end
+end
+
+function s.xyzop(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetFirstTarget()
+	if not tc:IsRelateToEffect(e) or not aux.ToDeckOrElse(tc,tp,
+		function() return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and tc:IsCanBeSpecialSummoned(e,0,tp,false,false) end,
+		function() return Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)>0 end,
+		aux.Stringid(id,7)
+	) then return end
+	local g=Duel.GetMatchingGroup(Card.IsXyzSummonable,tp,LOCATION_EXTRA,0,1,nil)
+	if #g>0 and Duel.SelectYesNo(tp,aux.Stringid(id,8)) then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+		local sg=g:Select(tp,1,1,nil)
+		Duel.XyzSummon(tp,sg:GetFirst())
 	end
 end
