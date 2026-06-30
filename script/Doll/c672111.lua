@@ -8,7 +8,6 @@ function s.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetCountLimit(1,id)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
@@ -29,7 +28,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 
-s.listed_series={SET_NUMBER_C}
+s.listed_series={SET_NUMBER_C,SET_CXYZ}
 s.listed_names={id}
 
 function s.tgfilter(c,e,tp)
@@ -40,7 +39,7 @@ end
 
 function s.spfilter(c,e,tp,mc)
 	if c.rum_limit and not c.rum_limit(mc,e) then return false end
-	return mc:IsType(TYPE_XYZ,c,SUMMON_TYPE_XYZ,tp) and c:IsRank(8) and c:IsSetCard(SET_NUMBER_C) and c:IsAttribute(ATTRIBUTE_DARK) and mc:IsCanBeXyzMaterial(c,tp)
+	return mc:IsType(TYPE_XYZ,c,SUMMON_TYPE_XYZ,tp) and c:IsRank(8) and c:IsSetCard({SET_NUMBER_C,SET_CXYZ}) and c:IsAttribute(ATTRIBUTE_DARK) and mc:IsCanBeXyzMaterial(c,tp)
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false) and Duel.GetLocationCountFromEx(tp,tp,mc,c)>0
 end
 
