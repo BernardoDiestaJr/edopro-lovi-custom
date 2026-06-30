@@ -107,8 +107,8 @@ function s.xyztg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 
 function s.xyzop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetFirstTarget()
-	if not tc:IsRelateToEffect(e) or not aux.ToDeckOrElse(tc,tp, function() return Duel.GetLocationCount(tp,LOCATION_MZONE)<2 or Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) and tc:IsCanBeSpecialSummoned(e,0,tp,false,false) end, function() return Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)>0 end, aux.Stringid(id,7)) then return end
+	local tg=Duel.GetTargetCards(e)
+	if not tg:IsRelateToEffect(e) or not aux.ToDeckOrElse(tg,tp, function() return Duel.GetLocationCount(tp,LOCATION_MZONE)<2 or Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) and tg:IsCanBeSpecialSummoned(e,0,tp,false,false) end, function() return Duel.SpecialSummon(tg,0,tp,tp,false,false,POS_FACEUP)>0 end, aux.Stringid(id,7)) then return end
 	local g=Duel.GetMatchingGroup(Card.IsXyzSummonable,tp,LOCATION_EXTRA,0,1,nil)
 	if #g>0 and Duel.SelectYesNo(tp,aux.Stringid(id,8)) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
