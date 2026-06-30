@@ -2653,9 +2653,9 @@ function Auxiliary.ToDeckOrElse(card,player,check,oper,str,...)
 		end
 		local opt
 		if b1 and b2 then
-			opt=Duel.SelectOption(player,573,str)
+			opt=Duel.SelectOption(player,507,str)
 		elseif b1 then
-			opt=Duel.SelectOption(player,573)
+			opt=Duel.SelectOption(player,507)
 		else
 			opt=Duel.SelectOption(player,str)+1
 		end
