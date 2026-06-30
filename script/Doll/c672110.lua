@@ -28,9 +28,9 @@ function s.initial_effect(c)
 	e3:SetTarget(s.attg)
 	e3:SetOperation(s.atop)
 	c:RegisterEffect(e3)	
-	--Xyz Summon 1 DARK Xyz Monster using Level 4 monsters or Normal Monsters
+	--Special Summon 2 Level 4 monsters and/or 2 Level 4 or higher Normal Monsters in your GY, then Xyz Summon
 	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(id,5))
+	e4:SetDescription(aux.Stringid(id,4))
 	e4:SetCategory(CATEGORY_TODECK+CATEGORY_SPECIAL_SUMMON)
 	e4:SetType(EFFECT_TYPE_QUICK_O)
 	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
@@ -90,29 +90,29 @@ function s.atop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.xyzfilter(c,e,tp,mmz_chk)
-	return (c:IsLevel(4) or c:IsType(TYPE_NORMAL) and c:IsLevelAbove(4)) and c:IsFaceup() and (c:IsAbleToDeck() or (mmz_chk and c:IsCanBeSpecialSummoned(e,0,tp,false,false)))
+	return (c:IsLevel(4) or c:IsType(TYPE_NORMAL) and c:IsLevelAbove(4)) and c:IsFaceup() and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 
 function s.xyztg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	local mmz_chk=Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.xyzfilter(chkc,e,tp,mmz_chk) end
-	if chk==0 then return Duel.IsExistingTarget(s.xyzfilter,tp,LOCATION_GRAVE,0,2,nil,e,tp,mmz_chk) end
-	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,6))
-	local g=Duel.SelectTarget(tp,s.xyzfilter,tp,LOCATION_GRAVE,0,2,2,nil,e,tp,mmz_chk)
-	Duel.SetPossibleOperationInfo(0,CATEGORY_TODECK,g,2,tp,0)
-	Duel.SetPossibleOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,2,tp,0)
-	if g:GetFirst():IsLocation(LOCATION_GRAVE) then
-		Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,g,2,tp,0)
-	end
+	if chk==0 then return Duel.GetMZoneCount(tp,e:GetHandler())>0
+		and Duel.IsExistingMatchingCard(s.xyzfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE)
+	Duel.SetPossibleOperationInfo(0,CATEGORY_SPECIAL_SUMMON,sg,1,tp,0)
 end
 
 function s.xyzop(e,tp,eg,ep,ev,re,r,rp)
-	local tg=Duel.GetTargetCards(e)
-	if not tg:IsRelateToEffect(e) or not aux.ToDeckOrElse(tg,tp, function() return Duel.GetLocationCount(tp,LOCATION_MZONE)<2 or Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) and tg:IsCanBeSpecialSummoned(e,0,tp,false,false) end, function() return Duel.SpecialSummon(tg,0,tp,tp,false,false,POS_FACEUP)>0 end, aux.Stringid(id,7)) then return end
-	local g=Duel.GetMatchingGroup(Card.IsXyzSummonable,tp,LOCATION_EXTRA,0,1,nil)
-	if #g>0 and Duel.SelectYesNo(tp,aux.Stringid(id,8)) then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local sg=g:Select(tp,1,1,nil)
-		Duel.XyzSummon(tp,sg:GetFirst())
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	if ft<=0 then return end
+	ft=math.min(ft,2)
+	if Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) then ft=1 end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectMatchingCard(tp,s.xyzfilter,tp,LOCATION_GRAVE,0,1,ft,nil,e,tp)
+	if #g>0 and Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)>0 then
+	local sg=Duel.GetMatchingGroup(Card.IsXyzSummonable,tp,LOCATION_EXTRA,0,1,nil)
+	if #sg>0 and Duel.SelectYesNo(tp,aux.Stringid(id,5)) then
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+			local xg=sg:Select(tp,1,1,nil)
+			Duel.XyzSummon(tp,xg:GetFirst())
+		end		
 	end
 end
