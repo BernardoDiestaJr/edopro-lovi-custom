@@ -96,13 +96,13 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetTargetCards(e)
 	if #g>0 and Duel.SendtoHand(g,tp,REASON_EFFECT|REASON_RETURN)>0 and Duel.SelectYesNo(tp,aux.Stringid(id,4)) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		local tg=g:Select(tp,1,1,nil)
-		Duel.HintSelection(tg)
-		Duel.Remove(tg,POS_FACEUP,REASON_EFFECT)
+		local rg=g:Select(tp,1,1,nil)
+		if #rg==0 then return end
+		Duel.HintSelection(rg)
+		Duel.BreakEffect()
+		Duel.Remove(rg,REASON_EFFECT)
 	end
 end
-
-
 
 function s.cfilter(c)
 	return c:IsFaceup() and c:IsSetCard(SET_URSARCTIC) and c:IsType(TYPE_SYNCHRO) and c:IsMonster()
