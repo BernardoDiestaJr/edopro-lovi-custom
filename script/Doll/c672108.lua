@@ -44,10 +44,10 @@ function s.initial_effect(c)
 end
 
 s.listed_series={SET_DOLL_MONSTER}
-s.listed_names={75574498}
+s.listed_names={75574498,73445448}
 
 function s.ovfilter(c,tp,lc)
-	return c:IsFaceup() and (c:IsSummonCode(lc,SUMMON_TYPE_XYZ,tp,75574498) or c:IsRank(8))
+	return c:IsFaceup() and (c:IsSummonCode(lc,SUMMON_TYPE_XYZ,tp,73445448) or c:IsRankBelow(6) and c:IsAttribute(ATTRIBUTE_LIGHT))
 end
 
 function s.tgcond(e)
