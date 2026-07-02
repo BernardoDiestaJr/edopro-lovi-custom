@@ -29,7 +29,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)	
 end
 
-s.listed_names={id}
+s.listed_names={id,0x1f9}
 s.listed_series={0x1f7,0x1f8}
 
 function s.thfilter(c)
