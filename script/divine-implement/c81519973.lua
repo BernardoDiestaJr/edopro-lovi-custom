@@ -113,7 +113,10 @@ end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g=Duel.SelectMatchingCard(tp,nil,tp,0,LOCATION_ONFIELD,1,1,nil)
-	if #g>0 and Duel.HintSelection(g,true) and Duel.Destroy(g,REASON_EFFECT)>0 then
+	if #g>0 then
+		Duel.HintSelection(g,true)
+		Duel.Destroy(g,REASON_EFFECT)
 		Duel.Recover(tp,600,REASON_EFFECT)
 	end
 end
+
