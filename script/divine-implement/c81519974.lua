@@ -4,7 +4,7 @@ function s.initial_effect(c)
 	--Apply 1 of these effects, or if you Tributed a monster at activation, you can apply both effects in sequence
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
-	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH+CATEGORY_DAMAGE+CATEGORY_SPECIAL_SUMMON)
+	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH+CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetHintTiming(0,TIMING_STANDBY_PHASE|TIMING_MAIN_END|TIMINGS_CHECK_MONSTER_E)
@@ -31,7 +31,6 @@ end
 function s.efftg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetPossibleOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK|LOCATION_GRAVE)
-	Duel.SetPossibleOperationInfo(0,CATEGORY_DAMAGE,nil,1,tp,1200)
 	Duel.SetPossibleOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND|LOCATION_DECK)
 end
 function s.thfilter(c)
@@ -60,9 +59,7 @@ function s.effop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 	if op==2 or op==3 then
-		--Take 800 damage
 		if breakeffect then Duel.BreakEffect() end
-		Duel.Damage(tp,1200,REASON_EFFECT)
 		--Special Summon 1 "Reimu the Eternal Shrine Maiden" or 1 monster that mentions it, from your hand or Deck, but it cannot attack directly.
 		if Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 			and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND|LOCATION_DECK,0,1,nil,e,tp)
