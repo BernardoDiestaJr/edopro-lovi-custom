@@ -8,7 +8,6 @@ A variety of custom archetypes I have designed and scripted.
   - *"Reimu the Eternal Shrine Maiden"* - This archetype includes "Reimu the Eternal Shrine Maiden," the main protagonist of the Touhou Project series, and her variants.
   - *"Divine Implement"* - Mainly consisting of spells, traps, and non-Illusion monsters, this archetype supports "Reimu the Eternal Shrine Maiden," "Onmyō," and "Fantasia" archetypes.
   - *"Onmyō"* - Another supporting archetype for "Reimu the Eternal Shrine Maiden" and "Fantasia" archetypes.
-  - *"Aunn"* - Another supporting archetype mainly for the "Reimu the Eternal Shrine Maiden" archetype.
 - *"Mystikrios"* - Is an archetype of cards that revolve around the Mystical Sheep #2.
 - *"Kyrio"* - Is an archetype of mostly level 12 Sea-Serpents.
 - *"Piscera"* - Is an archetype of mostly Flip Fish monsters based on the Early to Late Devonian Period, also known as the "Age of Fishes".
