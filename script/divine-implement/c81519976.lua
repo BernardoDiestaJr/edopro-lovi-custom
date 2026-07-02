@@ -38,7 +38,7 @@ function s.initial_effect(c)
 end
 
 s.listed_names={id,0x1f9,81519980}
-s.listed_series={0x1f9,0x1fb}
+s.listed_series={0x1f9}
 
 function s.filter(c)
 	return c:IsFaceup() and c:IsSetCard(0x1f9)
@@ -58,7 +58,7 @@ end
 function s.tktg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-			and Duel.IsPlayerCanSpecialSummonMonster(tp,81519980,0x1fb,TYPES_TOKEN,900,1800,2,RACE_BEAST,ATTRIBUTE_EARTH)
+			and Duel.IsPlayerCanSpecialSummonMonster(tp,81519980,nil,TYPES_TOKEN,900,1800,2,RACE_BEAST,ATTRIBUTE_EARTH)
 	end
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,0)
