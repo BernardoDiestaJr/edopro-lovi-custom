@@ -35,10 +35,9 @@ function s.initial_effect(c)
 	e4:SetValue(function(e,c) return s.repfilter(c,e:GetHandlerPlayer()) end)
 	e4:SetOperation(function(e) Duel.SendtoDeck(e:GetHandler(),LOCATION_FZONE,SEQ_DECKSHUFFLE,REASON_EFFECT) end)
 	c:RegisterEffect(e4)	
-	
 end
 
-s.listed_names={id,0x1f9,815199713}
+s.listed_names={id,0x1f9,81519980}
 s.listed_series={0x1f9,0x1fb}
 
 function s.filter(c)
@@ -59,7 +58,7 @@ end
 function s.tktg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-			and Duel.IsPlayerCanSpecialSummonMonster(tp,815199713,0x1fb,TYPES_TOKEN,900,1800,2,RACE_BEAST,ATTRIBUTE_EARTH)
+			and Duel.IsPlayerCanSpecialSummonMonster(tp,81519980,0x1fb,TYPES_TOKEN,900,1800,2,RACE_BEAST,ATTRIBUTE_EARTH)
 	end
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,0)
@@ -68,7 +67,7 @@ end
 function s.tkop(e,tp,eg,ep,ev,re,r,rp)
 	if s.tktg(e,tp,eg,ep,ev,re,r,rp,0) then
 		local c=e:GetHandler()
-		local token=Duel.CreateToken(tp,815199713)
+		local token=Duel.CreateToken(tp,81519980)
 		Duel.SpecialSummonStep(token,0,tp,tp,false,false,POS_FACEUP)
 		--Cannot Special Summon non-Link monsters from Extra Deck
 		local e1=Effect.CreateEffect(c)
