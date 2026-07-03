@@ -6,8 +6,8 @@ function s.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_SPSUMMON_PROC)
 	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
-	e1:SetRange(LOCATION_DECK)
-	e1:SetCountLimit(1,id,EFFECT_COUNT_CODE_OATH)
+	e1:SetRange(LOCATION_HAND|LOCATION_DECK)
+	e1:SetCountLimit(1,id,EFFECT_COUNT_CODE_DUEL)
 	e1:SetCondition(s.spcon)
 	c:RegisterEffect(e1)
 	--You can shuffle this card from your hand or field into the Deck; add 1 "Onmyō" card from your Deck to your hand.
@@ -39,7 +39,7 @@ end
 s.listed_names={id,0x1f9}
 s.listed_series={0x1f9,0x1fa}
 
-function s.filter(c)
+function s.spconfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x1f9)
 end
 
@@ -54,7 +54,7 @@ end
 function s.spcon(e,c)
 	if c==nil then return true end
 	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(s.filter,c:GetControler(),LOCATION_MZONE,0,1,nil)
+		and Duel.IsExistingMatchingCard(s.spconfilter,c:GetControler(),LOCATION_MZONE,0,1,nil)
 end
 
 
