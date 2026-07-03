@@ -3,12 +3,14 @@ local s,id=GetID()
 function s.initial_effect(c)
 	--Special Summon itself from the deck
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,2))
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_SPSUMMON_PROC)
 	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
 	e1:SetRange(LOCATION_HAND|LOCATION_DECK)
-	e1:SetCountLimit(1,id,EFFECT_COUNT_CODE_DUEL)
-	e1:SetCondition(s.spcon)
+	e1:SetCountLimit(1,id,EFFECT_COUNT_CODE_OATH)
+	e1:SetCondition(s.selfspcon)
+	e1:SetOperation(s.selfspop)
 	c:RegisterEffect(e1)
 	--You can shuffle this card from your hand or field into the Deck; add 1 "Onmyō" card from your Deck to your hand.
 	local e2=Effect.CreateEffect(c)
@@ -16,7 +18,7 @@ function s.initial_effect(c)
 	e2:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_HAND|LOCATION_MZONE)
-	e2:SetCountLimit(1,id)
+	e2:SetCountLimit(1,{id,1})
 	e2:SetCost(Cost.SelfToDeck)
 	e2:SetTarget(s.thtg)
 	e2:SetOperation(s.thop)
@@ -29,7 +31,7 @@ function s.initial_effect(c)
 	e3:SetCode(EVENT_FREE_CHAIN)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e3:SetRange(LOCATION_MZONE|LOCATION_GRAVE|LOCATION_REMOVED)
-	e3:SetCountLimit(1,{id,1})
+	e3:SetCountLimit(1,{id,2})
 	e3:SetTarget(s.eqtg)
 	e3:SetOperation(s.eqop)
 	c:RegisterEffect(e3)	
@@ -39,7 +41,7 @@ end
 s.listed_names={id,0x1f9}
 s.listed_series={0x1f9,0x1fa}
 
-function s.spconfilter(c)
+function s.selfspconfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x1f9)
 end
 
@@ -51,12 +53,24 @@ function s.thfilter(c)
 	return c:IsSetCard(0x1fa) and not c:IsCode(id) and c:IsAbleToHand()
 end
 
-function s.spcon(e,c)
+function s.selfspcon(e,c)
 	if c==nil then return true end
 	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(s.spconfilter,c:GetControler(),LOCATION_MZONE,0,1,nil)
+		and Duel.IsExistingMatchingCard(s.selfspconfilter,c:GetControler(),LOCATION_MZONE,0,1,nil)
 end
 
+function s.selfspop(e,tp,eg,ep,ev,re,r,rp,c)
+	--You cannot Special Summon for the rest of this turn, except Link and Fusion monsters
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetDescription(aux.Stringid(id,3))
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
+	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	e1:SetTargetRange(1,0)
+	e1:SetTarget(function(e,c) return c:IsLocation(LOCATION_EXTRA) and not c:IsLinkMonster() and not c:IsFusionMonster() end)
+	e1:SetReset(RESET_PHASE|PHASE_END)
+	Duel.RegisterEffect(e1,tp)
+end
 
 function s.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
