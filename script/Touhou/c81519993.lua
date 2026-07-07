@@ -81,7 +81,7 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 
 function s.rescon(sg,e,tp,mg)
-	return sg:FilterCount(Card.IsSetCard,nil,0x1fa) and not sg:FilterCount(Card.IsNormalSpell,nil) and not sg:FilterCount(Card.IsMonster,nil)<=1 and sg:FilterCount(Card.IsType,nil,TYPE_SPIRIT) and sg:FilterCount(Card.IsLevelBelow,nil,6)<=1
+	return sg:FilterCount(Card.IsSetCard,nil,0x1fa) and not sg:FilterCount(Card.IsNormalSpell,nil)<=1 and sg:FilterCount(Card.IsType,nil,TYPE_SPIRIT) and sg:FilterCount(Card.IsLevelBelow,nil,6)<=1
 end
 
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
