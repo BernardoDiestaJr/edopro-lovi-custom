@@ -31,7 +31,7 @@ s.listed_names={id,81519991}
 s.listed_series={0x1f8,0x1fa}
 
 function s.confilter(c)
-	return (c:IsRace(RACE_ILLUSION) or c:IsRace(RACE_ROCK) or c:IsType(TYPE_SPIRIT)
+	return (c:IsRace(RACE_ILLUSION) or c:IsRace(RACE_ROCK) or c:IsType(TYPE_SPIRIT))
 end
 
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
