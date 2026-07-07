@@ -56,9 +56,9 @@ end
 
 function s.orettg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.GetLocationCount(1-tp,LOCATION_MZONE)>0 and not Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT)
-		and Duel.IsPlayerCanSpecialSummonMonster(tp,81519991,0,TYPES_TOKEN,900,600,6,RACE_ROCK,ATTRIBUTE_EARTH,POS_FACEUP_DEFENSE)
-		and Duel.IsPlayerCanSpecialSummonMonster(tp,81519991,0,TYPES_TOKEN,900,600,6,RACE_ROCK,ATTRIBUTE_EARTH,POS_FACEUP_DEFENSE,1-tp) 
-		and Spirit.OptionalReturnTarget(e,tp,eg,ep,ev,re,r,rp,0) and s.tkcheck(e,tp) end
+		and s.sptktp(tp,tp)
+		and s.sptktp(tp,1-tp)
+		and Spirit.OptionalReturnTarget(e,tp,eg,ep,ev,re,r,rp,0) end
 	Spirit.OptionalReturnTarget(e,tp,eg,ep,ev,re,r,rp,1)
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,0,2,PLAYER_ALL,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,0,2,PLAYER_ALL,0)
