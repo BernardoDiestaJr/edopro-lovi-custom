@@ -72,7 +72,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.thfilter(c)
-	return (c:IsSetCard(0x1fa) and not c:IsNormalSpell() or c:IsLevelBelow(6) and c:IsType(TYPE_SPIRIT)) and c:IsAbleToHand()
+	return c:IsSetCard(0x1fa) and not c:IsNormalSpell() or c:IsLevelBelow(6) and c:IsType(TYPE_SPIRIT) and c:IsAbleToHand()
 end
 
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
