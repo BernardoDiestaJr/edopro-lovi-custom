@@ -52,8 +52,10 @@ function s.mrettg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 
 function s.orettg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Spirit.OptionalReturnTarget(e,tp,eg,ep,ev,re,r,rp,0) end
-	Spirit.OptionalReturnTarget(e,tp,eg,ep,ev,re,r,rp,1)
+	local c=e:GetHandler()
+	if chk==0 then return c:IsAbleToHand() end
+	c:ResetFlagEffect(FLAG_SPIRIT_RETURN)
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,c,1,0,0)
 end
 
 function s.sumfilter(c)
