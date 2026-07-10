@@ -50,15 +50,17 @@ end
 function s.selfspop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)>0 then
-		--Banish it when it leaves the field
+		local c=e:GetHandler()
 		local e1=Effect.CreateEffect(c)
-		e1:SetDescription(1307)
 		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CLIENT_HINT)
-		e1:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)
-		e1:SetValue(LOCATION_DECK)
-		e1:SetReset(RESET_EVENT|RESETS_REDIRECT)
-		c:RegisterEffect(e1,true)
+		e1:SetCode(EFFECT_DISABLE)
+		e1:SetReset(RESETS_STANDARD_PHASE_END)
+		c:RegisterEffect(e1)
+		local e2=Effect.CreateEffect(c)
+		e2:SetType(EFFECT_TYPE_SINGLE)
+		e2:SetCode(EFFECT_DISABLE_EFFECT)
+		e2:SetReset(RESETS_STANDARD_PHASE_END)
+		c:RegisterEffect(e2)
 	end
 end
 
