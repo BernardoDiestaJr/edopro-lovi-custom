@@ -35,7 +35,6 @@ function s.initial_effect(c)
 end
 
 s.listed_names={id,81519982,81519987}
-s.listed_series={0x1fa}
 
 function s.selfspcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,{81519982,81519987}),tp,LOCATION_MZONE,0,1,nil)
