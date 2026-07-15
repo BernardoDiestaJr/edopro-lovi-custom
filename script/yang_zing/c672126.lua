@@ -23,7 +23,7 @@ function s.initial_effect(c)
 	e1:SetOperation(s.thspop)
 	c:RegisterEffect(e1)	
 	Duel.AddCustomActivityCounter(id,ACTIVITY_CHAIN,function(re,tp,cid) return not re:IsMonsterEffect() end)
-	--(Quick Effect): Normal Summon 1 Wyrm monster from your hand in Defense Position, then you can destroy 1 card you control
+	--(Quick Effect): Special Summon 1 Wyrm monster from your hand in Defense Position, then you can destroy 1 card you control
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,0))
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_DESTROY)
