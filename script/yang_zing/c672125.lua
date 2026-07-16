@@ -34,7 +34,7 @@ function s.initial_effect(c)
 	e2:SetCost(Cost.Reveal(function(c) return c:IsRace(RACE_WYRM) end,true))
 	e2:SetTarget(s.desptg)
 	e2:SetOperation(s.despop)
-	e2:SetHintTiming(0,TIMING_STANDBY_PHASE|TIMING_MAIN_END|TIMINGS_CHECK_MONSTER_E)
+	e2:SetHintTiming(0,TIMING_MAIN_END|TIMING_BATTLE_START|TIMING_BATTLE_END|TIMINGS_CHECK_MONSTER)
 	c:RegisterEffect(e2)
 end
 
