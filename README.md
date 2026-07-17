@@ -18,6 +18,8 @@ A collection of cards that directly or indirectly supports old or unplayable arc
 - *"Gusto"*
 - *"Doll Monster"*
 - *"Worm"*
+- *"Ursarctic"*
+- *"Yang Zing"*
 - *"TBA"*
 
 # How to Install the repository
