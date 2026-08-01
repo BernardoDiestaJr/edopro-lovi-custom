@@ -35,7 +35,7 @@ function s.spconfilter(c)
 end
 
 function s.thfilter(c,e,tp,yukari_mzone_chk)
-	return (c:IsCode(81519982) or (c:IsLevelBelow(8) and c:ListsCode(81519982) and not c:IsCode(id))) and (c:IsAbleToHand() or (yukari_mzone_chk and c:IsCanBeSpecialSummoned(e,0,tp,false,false)))
+	return (c:IsCode(81519982) or (c:IsMonster() and c:ListsCode(81519982) and not c:IsCode(id))) and (c:IsAbleToHand() or (yukari_mzone_chk and c:IsCanBeSpecialSummoned(e,0,tp,false,false)))
 end
 
 function s.thsptg(e,tp,eg,ep,ev,re,r,rp,chk)
