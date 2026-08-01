@@ -37,11 +37,11 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)	
 end
 
-s.listed_names={id,0x1f9,81519980}
+s.listed_names={id,0x1f9,81519980,81519972}
 s.listed_series={0x1f9}
 
 function s.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0x1f9)
+	return c:IsFaceup() and c:IsSetCard(0x1f9) or c:IsCode(81519972)
 end
 
 function s.repfilter(c,tp)
