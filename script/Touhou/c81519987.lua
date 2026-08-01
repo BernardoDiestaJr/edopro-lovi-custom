@@ -72,7 +72,7 @@ function s.thspop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
-	return ep~=tp and re:IsMonsterEffect() and Duel.IsChainNegatable(ev)
+	return rp==1-tp
 end
 
 function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
