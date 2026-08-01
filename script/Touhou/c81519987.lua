@@ -71,25 +71,27 @@ function s.thspop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 
-function s.disconfilter(c)
-	return (c:IsAttribute(ATTRIBUTE_WIND) and c:IsRace(RACE_BEAST) or c:IsAttribute(ATTRIBUTE_DARK) and c:IsRace(RACE_ILLUSION)) and c:IsMonster() and c:IsFaceup()
-end
-
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
-	return rp==1-tp and Duel.IsExistingMatchingCard(s.disconfilter,tp,LOCATION_MZONE,0,1,nil)
+	return ep~=tp and re:IsMonsterEffect() and Duel.IsChainNegatable(ev)
 end
 
 function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
+	if chk==0 then return not e:GetHandler():IsStatus(STATUS_CHAINING)
+		and Duel.GetLocationCount(tp,LOCATION_MZONE)>1
+		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND|LOCATION_GRAVE)
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,eg,1,tp,0)
 	Duel.SetPossibleOperationInfo(0,CATEGORY_TODECK,re:GetHandler(),1,tp,0)
 end
 
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)>0 then
 	local rc=re:GetHandler()
-	if Duel.NegateEffect(ev) and rc:IsRelateToEffect(re) and rc:IsDestructable()
-		and Duel.SelectYesNo(tp,aux.Stringid(id,5)) then
-		Duel.BreakEffect()
-		Duel.SendtoDeck(eg,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
+		if Duel.NegateEffect(ev) and rc:IsRelateToEffect(re) and rc:IsDestructable()
+			and Duel.SelectYesNo(tp,aux.Stringid(id,5)) then
+			Duel.BreakEffect()
+			Duel.SendtoDeck(eg,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
+		end	
 	end
 end
