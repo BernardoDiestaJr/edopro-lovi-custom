@@ -3,7 +3,7 @@ local s,id=GetID()
 function s.initial_effect(c)
 	c:EnableUnsummonable()
 	c:AddMustBeSpecialSummonedByCardEffect()
-	--Add 1 "Yukari of Velvet Boundaries" or 1 Level 8 or lower monster that mentions it from your Deck, GY or banishment, or if you control "Chen of Velvet Boundaries", you can Special Summon it instead
+	--Add 1 "Yukari of Velvet Boundaries" or 1 Level 8 or lower monster that mentions it from your Deck or GY, or if you control "Chen of Velvet Boundaries", you can Special Summon it instead
 	local e0=Effect.CreateEffect(c)
 	e0:SetDescription(aux.Stringid(id,0))
 	e0:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH+CATEGORY_SPECIAL_SUMMON)
@@ -42,10 +42,10 @@ function s.thsptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		local yukari_mzone_chk=Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 			and Duel.IsExistingMatchingCard(s.spconfilter,tp,LOCATION_ONFIELD,0,1,nil)
-		return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK|LOCATION_GRAVE|LOCATION_REMOVED,0,1,nil,e,tp,yukari_mzone_chk)
+		return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK|LOCATION_GRAVE,0,1,nil,e,tp,yukari_mzone_chk)
 	end
-	Duel.SetPossibleOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK|LOCATION_GRAVE|LOCATION_REMOVED)
-	Duel.SetPossibleOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK|LOCATION_GRAVE|LOCATION_REMOVED)
+	Duel.SetPossibleOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK|LOCATION_GRAVE)
+	Duel.SetPossibleOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK|LOCATION_GRAVE)
 end
 
 function s.thspop(e,tp,eg,ep,ev,re,r,rp)
@@ -53,7 +53,7 @@ function s.thspop(e,tp,eg,ep,ev,re,r,rp)
 		and Duel.IsExistingMatchingCard(s.spconfilter,tp,LOCATION_ONFIELD,0,1,nil)
 	local hintmsg=yukari_mzone_chk and aux.Stringid(id,2) or HINTMSG_ATOHAND
 	Duel.Hint(HINT_SELECTMSG,tp,hintmsg)
-	local sc=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK|LOCATION_GRAVE|LOCATION_REMOVED,0,1,1,nil,e,tp,yukari_mzone_chk):GetFirst()
+	local sc=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK|LOCATION_GRAVE,0,1,1,nil,e,tp,yukari_mzone_chk):GetFirst()
 	if not sc then return end
 	local op=1
 	if yukari_mzone_chk then
