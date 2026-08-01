@@ -3,7 +3,7 @@ local s,id=GetID()
 function s.initial_effect(c)
 	c:EnableUnsummonable()
 	c:AddMustBeSpecialSummonedByCardEffect()
-	--Add 1 "Yukari of Velvet Boundaries" or 1 Level 8 or lower monster that mentions it from your Deck or GY, or if you control "Chen of Velvet Boundaries", you can Special Summon it instead
+	--Add 1 "Yukari of Velvet Boundaries" or 1 monster that mentions it from your Deck or GY, or if you control "Chen of Velvet Boundaries", you can Special Summon it instead
 	local e0=Effect.CreateEffect(c)
 	e0:SetDescription(aux.Stringid(id,0))
 	e0:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH+CATEGORY_SPECIAL_SUMMON)
