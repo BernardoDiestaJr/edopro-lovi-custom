@@ -17,7 +17,7 @@ function s.initial_effect(c)
 	e0b:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
 	e0b:SetValue(aux.tgoval)
 	c:RegisterEffect(e0b)
-	--You can target 2 of your non-Link "Fantasia" monsters from your GY; return them to your hand, and if you do, add 1 "Fantasia" card from your Deck to your hand.
+	--You can target 2 of your non-Link "Fantasia" monsters from your GY; return them to your hand, and if you do, send 1 non-Illusion "Fantasia" monster from your Deck to the GY
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_TOGRAVE)
@@ -29,7 +29,7 @@ function s.initial_effect(c)
 	e1:SetTarget(s.thtgtg)
 	e1:SetOperation(s.thtgop)
 	c:RegisterEffect(e1)
-	--If this card is sent to the GY as Link Material: You can discard 1 card; Special Summon this card, but banish it when it leaves the field.
+	--If this card is sent to the GY as Link Material: You can discard 1 card; Special Summon this card, but banish it when it leaves the field
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,1))
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
@@ -59,7 +59,7 @@ function s.thfilter(c)
 end
 
 function s.tgfilter(c)
-	return c:IsSetCard(0x1f8) and not c:IsRace(RACE_ILLUSION) and c:IsAbleToHand()
+	return c:IsSetCard(0x1f8) and not c:IsRace(RACE_ILLUSION) and c:IsMonster() and c:IsAbleToHand()
 end
 
 function s.thtgtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
