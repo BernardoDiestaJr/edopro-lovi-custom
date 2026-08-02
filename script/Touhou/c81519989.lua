@@ -66,13 +66,8 @@ function s.selfspop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.SendtoGrave(g,REASON_COST)
 end
 
-
-function s.remfilter(c)
-	return c:IsSetCard(0x2f1) and not c:IsCode(id)
-end
-
 function s.tkcostfilter(c)
-	return s.remfilter(c) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
+	return c:IsSetCard(0x2f1) and not c:IsCode(id) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 
 function s.tkcost(e,tp,eg,ep,ev,re,r,rp,chk)
