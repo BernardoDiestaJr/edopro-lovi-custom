@@ -82,10 +82,15 @@ function s.tkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 
+function s.thconfilter(c)
+	return c:IsFaceup() and not (c:IsAttribute(ATTRIBUTE_WIND))
+end
+
 function s.tktg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 			and Duel.IsPlayerCanSpecialSummonMonster(tp,81520000,0x2f1,TYPES_TOKEN+TYPE_TUNER,0,0,1,RACE_FAIRY,ATTRIBUTE_WIND)
+			and not Duel.IsExistingMatchingCard(s.thconfilter,tp,LOCATION_MZONE,0,1,nil)
 	end
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,0)
