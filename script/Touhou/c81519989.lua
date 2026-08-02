@@ -21,7 +21,7 @@ function s.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_DELAY)
 	e1:SetCode(EVENT_SUMMON_SUCCESS)
 	e1:SetCountLimit(1,{id,1})
-
+	e1:SetCost(s.tkcost)
 	e1:SetTarget(s.tktg)
 	e1:SetOperation(s.tkop)
 	c:RegisterEffect(e1)
@@ -66,14 +66,18 @@ function s.selfspop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.SendtoGrave(g,REASON_COST)
 end
 
-function s.rmcfilter(c)
-	return c:IsSetCard(0x2f1) and not c:IsCode(id) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
+function s.filter(c)
+	return c:IsSetCard(0x2f1) and not c:IsCode(id)
+end
+
+function s.tkcostfilter(c)
+	return s.filter(c) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 
 function s.tkcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.rmcfilter,tp,LOCATION_MZONE|LOCATION_HAND|LOCATION_DECK|LOCATION_GRAVE,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.tkcostfilter,tp,LOCATION_MZONE|LOCATION_GRAVE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,s.rmcfilter,tp,LOCATION_MZONE|LOCATION_HAND|LOCATION_DECK|LOCATION_GRAVE,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,s.tkcostfilter,tp,LOCATION_MZONE|LOCATION_GRAVE,0,1,1,nil)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 
