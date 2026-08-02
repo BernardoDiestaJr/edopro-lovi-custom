@@ -1,4 +1,4 @@
---Reimu the Red Fantasia Maiden
+--Reimu, Dichroic Fantasia Maiden
 local s,id=GetID()
 function s.initial_effect(c)
 	--Add 1 "Divine Implement" monster from your Deck to your hand
@@ -8,7 +8,7 @@ function s.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetProperty(EFFECT_FLAG_DELAY)
 	e1:SetCode(EVENT_SUMMON_SUCCESS)
-	e1:SetCountLimit(1,id)
+	e1:SetCountLimit(1,{id,0})
 	e1:SetTarget(s.thtg)
 	e1:SetOperation(s.thop)
 	c:RegisterEffect(e1)
@@ -29,8 +29,8 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)	
 end
 
-s.listed_names={id,0x1f9}
-s.listed_series={0x1f7,0x1f8}
+s.listed_names={id}
+s.listed_series={0x1f7}
 
 function s.thfilter(c)
 	return c:IsSetCard(0x1f7) and c:IsAbleToHand()
