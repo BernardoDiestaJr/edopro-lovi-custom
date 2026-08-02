@@ -18,18 +18,23 @@ end
 s.listed_series={0x2f1,0x1f8}
 s.listed_names={id}
 
-function s.selfspconfilter(c)
+function s.selfspconfilter1(c)
 	return c:IsAttribute(ATTRIBUTE_WIND) and c:IsType(TYPE_SYNCHRO) and c:IsAbleToGraveAsCost()
+end
+
+function s.selfspconfilter2(c)
+	return not (c:IsAttribute(ATTRIBUTE_WIND) and c:IsFaceup())
 end
 
 function s.selfspcon(e,c)
 	if c==nil then return true end
 	local tp=e:GetHandlerPlayer()
-	local g=Duel.GetMatchingGroup(s.selfspconfilter,tp,LOCATION_EXTRA,0,nil)
-	return #g>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+	local g=Duel.GetMatchingGroup(s.selfspconfilter1,tp,LOCATION_EXTRA,0,nil)
+	return #g>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and not Duel.IsExistingMatchingCard(s.selfspconfilter2,tp,LOCATION_MZONE,0,1,nil)
 end
+
 function s.selfsptg(e,tp,eg,ep,ev,re,r,rp,chk,c)
-	local rg=Duel.GetMatchingGroup(s.selfspconfilter,tp,LOCATION_EXTRA,0,nil)
+	local rg=Duel.GetMatchingGroup(s.selfspconfilter1,tp,LOCATION_EXTRA,0,nil)
 	local g=aux.SelectUnselectGroup(rg,e,tp,1,1,aux.ChkfMMZ(1),1,tp,HINTMSG_TOGRAVE,nil,nil,true)
 	if #g>0 then
 		g:KeepAlive()
