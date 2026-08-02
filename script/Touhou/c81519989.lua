@@ -78,7 +78,7 @@ function s.tkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 
 function s.thconfilter(c)
-	return c:IsFaceup() and not (c:IsAttribute(ATTRIBUTE_WIND))
+	return c:IsFaceup() and not c:IsAttribute(ATTRIBUTE_WIND)
 end
 
 function s.tktg(e,tp,eg,ep,ev,re,r,rp,chk)
