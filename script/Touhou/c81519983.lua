@@ -1,4 +1,4 @@
---Marisa the Black Fantasia Magician
+--Marisa, Ordinary Fantasia Magician
 local s,id=GetID()
 function s.initial_effect(c)
 	--Add 1 "Fantasia" monster from your Deck to your hand except itself.
