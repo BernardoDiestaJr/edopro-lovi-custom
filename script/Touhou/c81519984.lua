@@ -2,8 +2,8 @@
 local s,id=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
-	--Fusion Materials: 2 Illusion or LIGHT Fiend monsters + 1 LIGHT or DARK Spellcaster monster
-	Fusion.AddProcMix(c,true,true,s.matfilter2(c,fc,sumtype,tp),2,99,s.matfilter1(c,fc,sumtype,tp),1)
+	--Fusion Materials: 1 LIGHT or DARK monster + 2+ Illusion or Fiend monsters
+	Fusion.AddProcMixRep(c,true,true,aux.FilterBoolFunctionEx(Card.IsRace,RACE_ILLUSION|RACE_FIEND),2,99,aux.FilterBoolFunctionEx(Card.IsAttribute,ATTRIBUTE_LIGHT|ATTRIBUTE_DARK))
 	c:AddMustBeFusionSummoned()
 	--You can only Fusion Summon or Special Summon by its alternate procedure "Shinki of Pandaemonium" once per turn
 	local e0=Effect.CreateEffect(c)
@@ -50,16 +50,8 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)	
 end	
 	
-s.listed_names={id,0x1f8}
+s.listed_names={id}
 s.listed_series={0x1fb}
-
-function s.matfilter1(c,fc,sumtype,tp)
-	return (c:IsAttribute(ATTRIBUTE_LIGHT,fc,sumtype,tp) or c:IsAttribute(ATTRIBUTE_DARK,fc,sumtype,tp)) and c:IsRace(RACE_SPELLCASTER,fc,sumtype,tp)
-end
-
-function s.matfilter2(c,fc,sumtype,tp)
-	return (c:IsRace(RACE_ILLUSION,fc,sumtype,tp) or c:IsAttribute(ATTRIBUTE_LIGHT,fc,sumtype,tp) and c:IsRace(RACE_FIEND,fc,sumtype,tp))
-end
 
 function s.regcon(e)
 	local c=e:GetHandler()
