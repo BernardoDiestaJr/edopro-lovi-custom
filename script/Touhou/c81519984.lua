@@ -2,8 +2,8 @@
 local s,id=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
-	--Fusion Materials: 1 LIGHT or DARK monster + 2+ Illusion or Fiend monsters
-	Fusion.AddProcMixRep(c,true,true,aux.FilterBoolFunctionEx(Card.IsRace,RACE_ILLUSION|RACE_FIEND),2,99,aux.FilterBoolFunctionEx(Card.IsAttribute,ATTRIBUTE_LIGHT|ATTRIBUTE_DARK))
+	--Fusion Materials: 1 LIGHT or DARK monster + 2 Illusion or Fiend monsters
+	Fusion.AddProcMixRep(c,true,true,aux.FilterBoolFunctionEx(Card.IsRace,RACE_ILLUSION|RACE_FIEND),2,2,aux.FilterBoolFunctionEx(Card.IsAttribute,ATTRIBUTE_LIGHT|ATTRIBUTE_DARK))
 	c:AddMustBeFusionSummoned()
 	--You can only Fusion Summon or Special Summon by its alternate procedure "Shinki of Pandaemonium" once per turn
 	local e0=Effect.CreateEffect(c)
