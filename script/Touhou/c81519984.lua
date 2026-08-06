@@ -3,7 +3,7 @@ local s,id=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
 	--Fusion Materials: 2 Illusion or LIGHT Fiend monsters + 1 LIGHT or DARK Spellcaster monster
-	Fusion.AddProcMix(c,true,true,s.matfilter1,1,s.matfilter2,2)
+	Fusion.AddProcMix(c,true,true,s.matfilter2(c,fc,sumtype,tp),2,99,s.matfilter1(c,fc,sumtype,tp),1)
 	c:AddMustBeFusionSummoned()
 	--You can only Fusion Summon or Special Summon by its alternate procedure "Shinki of Pandaemonium" once per turn
 	local e0=Effect.CreateEffect(c)
