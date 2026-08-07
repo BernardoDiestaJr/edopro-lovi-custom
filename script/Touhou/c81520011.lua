@@ -20,7 +20,7 @@ function s.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCode(EVENT_CHAINING)
 	e2:SetRange(LOCATION_MZONE)
-	e2:SetCondition(function(e,tp,eg,ep,ev,re,r,rp) return rp==1-tp end)
+	e2:SetCondition(s.discon)
 	e2:SetCost(Cost.PayLP(300))
 	e2:SetTarget(s.efftg)
 	e2:SetOperation(s.effop)
@@ -52,8 +52,8 @@ function s.selfspop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
-	local ch=Duel.GetCurrentChain()-1
-	return ch>0 and ep==1-tp and Duel.GetChainInfo(ch,CHAININFO_TRIGGERING_CONTROLER)==tp and Duel.IsChainDisablable(ev)
+	local loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)
+	return rp==1-tp and loc&LOCATION_ONFIELD>0 and Duel.IsChainNegatable(ev)
 end
 
 function s.plfilter(c)
