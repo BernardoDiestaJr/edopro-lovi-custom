@@ -101,20 +101,10 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if #g>0 then
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end
-	--You cannot Special Summon from the Extra Deck for the rest of this turn, except Synchro Monsters
-	local e1=Effect.CreateEffect(e:GetHandler())
-	e1:SetDescription(aux.Stringid(id,2))
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
-	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-	e1:SetTargetRange(1,0)
-	e1:SetTarget(function(e,c) return c:IsLocation(LOCATION_EXTRA) and not c:IsSynchroMonster() end)
-	e1:SetReset(RESET_PHASE|PHASE_END)
-	Duel.RegisterEffect(e1,tp)
 end
 
 function s.stzthfilter(c)
-	return (c:IsDefenseBelow(1800) or c:IsAttackBelow(1800)) and c:IsMonster() and c:IsAttribute(ATTRIBUTE_WIND) and c:IsAbleToHand()
+	return (c:IsDefenseBelow(1800) or c:IsAttackBelow(1800)) and c:IsLevelBelow(4) and c:IsMonster() and c:IsAttribute(ATTRIBUTE_WIND) and c:IsAbleToHand()
 end
 
 function s.stzthtg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -129,4 +119,14 @@ function s.stzthop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
 	end
+	--You cannot Special Summon from the Extra Deck for the rest of this turn, except Synchro Monsters
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetDescription(aux.Stringid(id,2))
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
+	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	e1:SetTargetRange(1,0)
+	e1:SetTarget(function(e,c) return c:IsLocation(LOCATION_EXTRA) and not c:IsAttribute(ATTRIBUTE_WIND) and not c:IsSynchroMonster() end)
+	e1:SetReset(RESET_PHASE|PHASE_END)
+	Duel.RegisterEffect(e1,tp)
 end
