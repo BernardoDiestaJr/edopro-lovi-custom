@@ -26,7 +26,7 @@ function s.initial_effect(c)
 	e2:SetTarget(s.sptg)
 	e2:SetOperation(s.spop)
 	c:RegisterEffect(e2)	
-	--Add 1 Level 4 or lower WIND monster with 1800 or less DEF or ATK from your Deck to your hand
+	--Add 1 Level 4 WIND monster with 1800 or less ATK from your Deck to your hand
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,3))
 	e3:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
@@ -104,7 +104,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.stzthfilter(c)
-	return (c:IsDefenseBelow(1800) or c:IsAttackBelow(1800)) and c:IsLevelBelow(4) and c:IsMonster() and c:IsAttribute(ATTRIBUTE_WIND) and c:IsAbleToHand()
+	return c:IsAttackBelow(1800) and c:IsLevel(4) and c:IsMonster() and c:IsAttribute(ATTRIBUTE_WIND) and c:IsAbleToHand()
 end
 
 function s.stzthtg(e,tp,eg,ep,ev,re,r,rp,chk)
