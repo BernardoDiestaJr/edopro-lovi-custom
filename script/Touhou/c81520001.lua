@@ -4,16 +4,6 @@ function s.initial_effect(c)
 	c:EnableReviveLimit()
 	--Synchro Summon procedure: "Sanae, Windrous Fantasia Priestess" + 1+ WIND Tuners
 	Synchro.AddProcedure(c,aux.FALSE,1,1,s.tunerfilter,1,99,aux.FilterSummonCode(81519989))
-	--Opponent cannot target your WIND monsters
-	local e0=Effect.CreateEffect(c)
-	e0:SetType(EFFECT_TYPE_FIELD)
-	e0:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
-	e0:SetRange(LOCATION_MZONE)
-	e0:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
-	e0:SetTargetRange(LOCATION_MZONE,0)
-	e0:SetTarget(aux.TargetBoolFunction(Card.IsAttribute,ATTRIBUTE_WIND))
-	e0:SetValue(aux.tgoval)
-	c:RegisterEffect(e0)	
 	--You can target up to 2 "Windrous" Spells/Traps in your GY or banishment; add them to your hand
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
@@ -25,7 +15,7 @@ function s.initial_effect(c)
 	e1:SetTarget(s.thtg)
 	e1:SetOperation(s.thop)
 	c:RegisterEffect(e1)
-	--Send up to 2 WIND Synchro Monsters from your Extra Deck to the GY, except a Level 8 or lower monster; Special Summon 1 "Windrous" monster from your Deck or GY
+	--Send up to 2 WIND Synchro Monsters from your Extra Deck to the GY, except a Level 6 or lower monster; Special Summon 1 "Windrous" monster from your Deck or GY
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -36,7 +26,24 @@ function s.initial_effect(c)
 	e2:SetTarget(s.sptg)
 	e2:SetOperation(s.spop)
 	c:RegisterEffect(e2)	
-	
+	--Add 1 Level 4 or lower WIND monster with 1800 or less DEF or ATK from your Deck to your hand
+	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(id,3))
+	e3:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+	e3:SetType(EFFECT_TYPE_IGNITION)
+	e3:SetRange(LOCATION_SZONE)
+	e3:SetCountLimit(1,{id,2})
+	e3:SetCondition(function(e) return e:GetHandler():IsContinuousSpell() end)
+	e3:SetCost(Cost.SelfToExtra)
+	e3:SetTarget(s.stzthtg)
+	e3:SetOperation(s.stzthop)
+	c:RegisterEffect(e3)	
+	local e4=e3:Clone()
+	e4:SetType(EFFECT_TYPE_QUICK_O)
+	e4:SetCode(EVENT_FREE_CHAIN)
+	e4:SetHintTiming(0,TIMINGS_CHECK_MONSTER|TIMING_MAIN_END)
+	e4:SetCondition(function(e) return e:GetHandler():IsContinuousTrap() end)	
+	c:RegisterEffect(e4)
 end
 
 s.listed_series={0x2f1}
@@ -67,7 +74,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.spcostfilter(c)
-	return c:IsAttribute(ATTRIBUTE_WIND) and c:IsType(TYPE_SYNCHRO) and not c:IsLevelBelow(8) and c:IsAbleToGraveAsCost()
+	return c:IsAttribute(ATTRIBUTE_WIND) and c:IsType(TYPE_SYNCHRO) and not c:IsLevelBelow(6) and c:IsAbleToGraveAsCost()
 end
 
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -104,4 +111,22 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetTarget(function(e,c) return c:IsLocation(LOCATION_EXTRA) and not c:IsSynchroMonster() end)
 	e1:SetReset(RESET_PHASE|PHASE_END)
 	Duel.RegisterEffect(e1,tp)
+end
+
+function s.stzthfilter(c)
+	return (c:IsDefenseBelow(1800) or c:IsAttackBelow(1800)) and c:IsMonster() and c:IsAttribute(ATTRIBUTE_WIND) and c:IsAbleToHand()
+end
+
+function s.stzthtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.stzthfilter,tp,LOCATION_DECK,0,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
+end
+
+function s.stzthop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+	local g=Duel.SelectMatchingCard(tp,s.stzthfilter,tp,LOCATION_DECK,0,1,1,nil)
+	if #g>0 then
+		Duel.SendtoHand(g,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,g)
+	end
 end
