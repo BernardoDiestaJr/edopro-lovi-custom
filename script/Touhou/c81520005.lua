@@ -3,7 +3,7 @@ local s,id=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
 	c:SetUniqueOnField(1,0,id)
-	--Synchro Summon procedure: "Sanae, Windrous Fantasia Priestess" + 1+ WIND Tuners
+	--Synchro Summon procedure: "Sanae, Windrous Fantasia Priestess" + 1+ Tuner Synchro Monsters
 	Synchro.AddProcedure(c,aux.FALSE,1,1,s.tunerfilter,1,99,aux.FilterSummonCode(81519989))	
 	--Special Summon 1 WIND Tuner Synchro Monster from your Extra Deck or GY, then you can place this card you control in your Spell & Trap Zone as a face-up Continuous Spell
 	local e1=Effect.CreateEffect(c)
