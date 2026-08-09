@@ -5,7 +5,7 @@ function s.initial_effect(c)
 	c:SetUniqueOnField(1,0,id)
 	--Synchro Summon procedure: "Sanae, Windrous Fantasia Priestess" + 1+ Tuner Synchro Monsters
 	Synchro.AddProcedure(c,aux.FALSE,1,1,s.tunerfilter,1,99,aux.FilterSummonCode(81519989))	
-	--Special Summon 1 WIND Tuner Synchro Monster from your Extra Deck or GY, then you can place this card you control in your Spell & Trap Zone as a face-up Continuous Spell
+	--Special Summon 1 WIND Tuner Synchro Monster from your Extra Deck or GY, then you can place this card you control in your Spell & Trap Zone as a face-up Continuous Trap
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -70,12 +70,12 @@ function s.plop(e,tp,eg,ep,ev,re,r,rp)
 		local c=e:GetHandler()
 		if not c:IsRelateToEffect(e) or c:IsImmuneToEffect(e) then return end
 		if Duel.MoveToField(c,tp,tp,LOCATION_SZONE,POS_FACEUP,true) then
-			--Treated as a Continuous Spell
+			--Treated as a Continuous Trap
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 			e1:SetCode(EFFECT_CHANGE_TYPE)
-			e1:SetValue(TYPE_SPELL|TYPE_CONTINUOUS)
+			e1:SetValue(TYPE_TRAP|TYPE_CONTINUOUS)
 			e1:SetReset(RESET_EVENT|RESETS_STANDARD&~RESET_TURN_SET)
 			c:RegisterEffect(e1)
 		end
