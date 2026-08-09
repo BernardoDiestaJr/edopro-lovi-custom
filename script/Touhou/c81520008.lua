@@ -99,7 +99,7 @@ function s.tdspop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.SendtoDeck(sc,nil,SEQ_DECKBOTTOM,REASON_EFFECT)>0 and sc:IsLocation(LOCATION_EXTRA)
 		and Duel.GetLocationCountFromEx(tp,tp,nil,sc)>0
 		and sc:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
-		and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+		and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
 		Duel.BreakEffect()
 		Duel.SpecialSummon(sc,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
 		local e1=Effect.CreateEffect(e:GetHandler())
@@ -112,7 +112,7 @@ function s.tdspop(e,tp,eg,ep,ev,re,r,rp)
 	end
 	--You cannot Special Summon from the Extra Deck for the rest of this turn, except Synchro Monsters
 	local e2=Effect.CreateEffect(e:GetHandler())
-	e2:SetDescription(aux.Stringid(id,3))
+	e2:SetDescription(aux.Stringid(id,4))
 	e2:SetType(EFFECT_TYPE_FIELD)
 	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
 	e2:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
