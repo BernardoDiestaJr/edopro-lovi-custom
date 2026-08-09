@@ -16,30 +16,23 @@ function s.initial_effect(c)
 	e1:SetTarget(s.pltg)
 	e1:SetOperation(s.plop)
 	c:RegisterEffect(e1)
-	--Special Summon this card
+	--Destroy up to 3 cards and Special Summon this card in Defense Position
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(id,2))
-	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e2:SetDescription(aux.Stringid(id,4))
+	e2:SetCategory(CATEGORY_DESTROY+CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetCountLimit(1,{id,1})
 	e2:SetCondition(function(e) return e:GetHandler():IsContinuousSpell() end)
-	e2:SetTarget(s.sptg)
-	e2:SetOperation(s.spop)
+	e2:SetCost(Cost.SelfToExtra)
+	e2:SetTarget(s.selfdestg)
+	e2:SetOperation(s.selfdesop)
 	c:RegisterEffect(e2)
-	--You can return this card to the Extra Deck, then target up to 3 cards your opponent controls; destroy them
-	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(id,4))
-	e3:SetCategory(CATEGORY_DESTROY)
+	local e3=e2:Clone()
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_FREE_CHAIN)
-	e3:SetRange(LOCATION_SZONE)
-	e3:SetCountLimit(1,{id,2})
 	e3:SetHintTiming(0,TIMINGS_CHECK_MONSTER|TIMING_MAIN_END)
-	e3:SetCondition(function(e) return e:GetHandler():IsContinuousTrap() end)
-	e3:SetCost(Cost.SelfToExtra)
-	e3:SetTarget(s.destg)
-	e3:SetOperation(s.desop)
+	e3:SetCondition(function(e) return e:GetHandler():IsContinuousTrap() end)	
 	c:RegisterEffect(e3)
 end
 
@@ -79,46 +72,25 @@ function s.plop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 
-function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local c=e:GetHandler()
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,tp,0)
-end
-
-function s.setfilter(c)
-	return c:IsSetCard(0x2f1) and c:IsSpellTrap() and c:IsSSetable()
-end
-
-function s.spop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)>0
-		and Duel.IsExistingMatchingCard(s.setfilter,tp,LOCATION_DECK|LOCATION_GRAVE,0,1,nil)
-		and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
-		local g=Duel.SelectMatchingCard(tp,s.setfilter,tp,LOCATION_DECK|LOCATION_GRAVE,0,1,1,nil)
-		if #g>0 then
-		Duel.SSet(tp,g)
-		end
-	end
-end
-
-function s.cfilter(c)
-	return c:IsAttribute(ATTRIBUTE_WIND) and c:IsMonster() and c:IsFaceup()
-end
-
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(1-tp) and chkc:IsOnField() end
-	if chk==0 then return Duel.IsExistingTarget(nil,tp,0,LOCATION_ONFIELD,1,nil) 
-	and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_ONFIELD,0,1,nil) end
+	if chk==0 then return Duel.IsExistingTarget(nil,tp,0,LOCATION_ONFIELD,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g=Duel.SelectTarget(tp,nil,tp,0,LOCATION_ONFIELD,1,3,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,tp,0)
+	Duel.SetPossibleOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,tp,LOCATION_EXTRA)
 end
 
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetTargetCards(e)
-	if #g>0 then 
-	Duel.Destroy(g,REASON_EFFECT)
+	if #g>0 and Duel.Destroy(g,REASON_EFFECT)>0 then 
+		local c=e:GetHandler()
+		if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 
+			and c:IsRelateToEffect(e) and c:IsLocation(LOCATION_EXTRA) 
+			and Duel.GetLocationCountFromEx(tp,tp,nil,sc)>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
+			and aux.nvfilter(c) and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+			Duel.BreakEffect()
+			Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
+		end
 	end
 end
