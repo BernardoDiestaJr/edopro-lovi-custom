@@ -40,8 +40,9 @@ function s.tdfilter(c,tp)
 end
 
 function s.efftg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local b1=not Duel.HasFlagEffect(tp,id)
-		and Duel.GetLocationCount(tp,LOCATION_SZONE)>0
+	local ft=Duel.GetLocationCount(tp,LOCATION_SZONE)
+	if e:GetHandler():IsLocation(LOCATION_HAND) then ft=ft-1 end
+	local b1=ft>0 and not Duel.HasFlagEffect(tp,id)
 		and Duel.IsExistingMatchingCard(s.plfilter,tp,LOCATION_EXTRA|LOCATION_GRAVE|LOCATION_REMOVED,0,1,nil)
 		and Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_DECK,0,1,nil)
 	local b2=not Duel.HasFlagEffect(tp,id+1)
@@ -65,13 +66,15 @@ end
 
 function s.effop(e,tp,eg,ep,ev,re,r,rp)
 	local op=e:GetLabel()
+	local ft=Duel.GetLocationCount(tp,LOCATION_SZONE)
 	local c=e:GetHandler()
 	if op==1 then
 		--Place 1 Synchro "Windrous" monster from your Extra Deck, GY or banishment in your Spell & Trap Zone as a face-up Continuous Trap, and if you do, send 1 Level 9 WIND monster from your Deck to the GY.
-		if Duel.GetLocationCount(tp,LOCATION_SZONE)==0 then return end
+		if ft<=0 then return end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
-		local tc=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.plfilter),tp,LOCATION_EXTRA|LOCATION_GRAVE|LOCATION_REMOVED,0,1,1,nil):GetFirst()
-		if tc and Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true) then
+		local sc=Duel.SelectMatchingCardtp,aux.NecroValleyFilter(s.plfilter),tp,LOCATION_EXTRA|LOCATION_GRAVE|LOCATION_REMOVED,0,1,1,nil):GetFirst()
+		if sc and Duel.MoveToField(sc,tp,tp,LOCATION_SZONE,POS_FACEUP,true) then
+			sc:RegisterFlagEffect(id,RESETS_STANDARD_PHASE_END,0,1)
 			--Treat as Continuous Trap
 			local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetType(EFFECT_TYPE_SINGLE)
@@ -79,7 +82,7 @@ function s.effop(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetCode(EFFECT_CHANGE_TYPE)
 			e1:SetValue(TYPE_TRAP|TYPE_CONTINUOUS)
 			e1:SetReset((RESET_EVENT|RESETS_STANDARD)&~RESET_TURN_SET)
-			tc:RegisterEffect(e1)
+			sc:RegisterEffect(e1)
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 			local g=Duel.SelectMatchingCard(tp,s.tgfilter,tp,LOCATION_DECK,0,1,1,nil)
 			if #g>0 then
