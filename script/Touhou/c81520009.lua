@@ -41,7 +41,7 @@ end
 
 function s.efftg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b1=not Duel.HasFlagEffect(tp,id)
-		and Duel.GetLocationCount(tp,LOCATION_SZONE)>1
+		and Duel.GetLocationCount(tp,LOCATION_SZONE)>0
 		and Duel.IsExistingMatchingCard(s.plfilter,tp,LOCATION_EXTRA|LOCATION_GRAVE|LOCATION_REMOVED,0,1,nil)
 		and Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_DECK,0,1,nil)
 	local b2=not Duel.HasFlagEffect(tp,id+1)
