@@ -84,7 +84,7 @@ function s.tgfilter(c)
 	return (c:IsCode(81519989) or c:ListsCode(81519989)) and c:IsAbleToGrave()
 end
 
-function s.thop(e,tp,eg,ep,ev,re,r,rp)
+function s.tgop(e,tp,eg,ep,ev,re,r,rp)
 	local p=e:GetHandler():GetOwner()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local g=Duel.SelectMatchingCard(p,s.tgfilter,p,LOCATION_DECK,0,1,1,nil)
