@@ -2,8 +2,8 @@
 local s,id=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
-	--Synchro Summon procedure: "Sanae, Windrous Fantasia Priestess" + 1+ Tuner Synchro Monsters
-	Synchro.AddProcedure(c,aux.FALSE,1,1,s.tunerfilter,1,99,aux.FilterSummonCode(81519989))
+	--Synchro Summon procedure: 1 Tuner + 1+ non-Tuner Synchro Monsters
+	Synchro.AddProcedure(c,nil,1,1,Synchro.NonTunerEx(Card.IsType,TYPE_SYNCHRO),1,99)
 	--Banish 1 "Windrous" card from your hand, Deck or GY, except "Windrous Divitant Misakujin", then target 1 WIND non-Tuner monster in your GY or banishment; Special Summon it in Defense Position, then you can destroy 1 face-up monster on the field
 	local e0=Effect.CreateEffect(c)
 	e0:SetDescription(aux.Stringid(id,0))
@@ -34,12 +34,7 @@ function s.initial_effect(c)
 end
 
 s.listed_series={0x2f1}
-s.listed_names={id,81519989}
-s.material={81519989}
-
-function s.tunerfilter(c,scard,sumtype,tp)
-	return c:IsType(TYPE_TUNER,scard,sumtype,tp) and c:IsType(TYPE_SYNCHRO) or c:IsHasEffect(EFFECT_CAN_BE_TUNER)
-end
+s.listed_names={id}
 
 function s.spcostfilter(c)
 	return c:IsSetCard(0x2f1) and not c:IsCode(id) and c:IsAbleToRemoveAsCost()
