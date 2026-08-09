@@ -19,12 +19,12 @@ function s.initial_effect(c)
 	--Destroy up to 3 cards and Special Summon this card in Defense Position
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,4))
-	e2:SetCategory(CATEGORY_DESTROY+CATEGORY_SPECIAL_SUMMON)
+	e2:SetCategory(CATEGORY_DESTROY+CATEGORY_TOEXTRA+CATEGORY_SPECIAL_SUMMON)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetCountLimit(1,{id,1})
 	e2:SetCondition(function(e) return e:GetHandler():IsContinuousSpell() end)
-	e2:SetCost(Cost.SelfToExtra)
 	e2:SetTarget(s.selfdestg)
 	e2:SetOperation(s.selfdesop)
 	c:RegisterEffect(e2)
@@ -74,23 +74,24 @@ end
 
 function s.selfdestg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(1-tp) and chkc:IsOnField() end
-	if chk==0 then return Duel.IsExistingTarget(nil,tp,0,LOCATION_ONFIELD,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+	if chk==0 then return c:IsAbleToExtra() and Duel.IsExistingTarget(nil,tp,0,LOCATION_ONFIELD,1,nil) end
 	local g=Duel.SelectTarget(tp,nil,tp,0,LOCATION_ONFIELD,1,3,nil)
+	Duel.SetOperationInfo(0,CATEGORY_TOEXTRA,c,1,tp,LOCATION_STZONE)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,tp,0)
-	Duel.SetPossibleOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,tp,LOCATION_EXTRA)
+	Duel.SetPossibleOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
 
 function s.selfdesop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetTargetCards(e)
-	if #g>0 and Duel.Destroy(g,REASON_EFFECT)>0 then 
-		local c=e:GetHandler()
-		if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 
-			and c:IsRelateToEffect(e) and c:IsLocation(LOCATION_EXTRA) 
-			and Duel.GetLocationCountFromEx(tp,tp,nil,sc)>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
-			and aux.nvfilter(c) and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
+	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) and Duel.SendtoDeck(c,nil,SEQ_DECKBOTTOM,REASON_EFFECT)>0
+		and c:IsLocation(LOCATION_EXTRA) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
+		and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)	
+		local g=Duel.GetTargetCards(e)
+		if #g>0 and Duel.Destroy(g,REASON_EFFECT)>0 then 	
 			Duel.BreakEffect()
-			Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
+			Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP_DEFENSE)		
 		end
 	end
 end
