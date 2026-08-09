@@ -95,7 +95,7 @@ function s.rthop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) and Duel.SendtoDeck(c,nil,SEQ_DECKBOTTOM,REASON_EFFECT)>0 and c:IsLocation(LOCATION_EXTRA) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)	
-		local g=Duel.SelectMatchingCard(tp,Card.IsAbleToHand,tp,0,LOCATION_ONFIELD,1,1,nil)
+		local g=Duel.SelectMatchingCard(tp,Card.IsAbleToHand,tp,0,LOCATION_ONFIELD,1,3,nil)
 		if #g>0 and Duel.HintSelection(g) and Duel.SendtoHand(g,nil,REASON_EFFECT)>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE) 
 		and Duel.SelectYesNo(tp,aux.Stringid(id,4)) then 	
 			Duel.BreakEffect()
@@ -103,3 +103,4 @@ function s.rthop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
+
