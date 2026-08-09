@@ -12,9 +12,9 @@ function s.initial_effect(c)
 	e0:SetTarget(s.selfsptg)
 	e0:SetOperation(s.selfspop)
 	c:RegisterEffect(e0)
-	--This card's owner adds 1 Spell/Trap that mentions "Sanae, Windrous Fantasia Priestess" from their Deck to their hand
+	--This card's owner of this card sends 1 "Sanae, Windrous Fantasia Priestess" or 1 card that mentions it from their Deck to their GY
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(id,2))
+	e1:SetDescription(aux.Stringid(id,3))
 	e1:SetCategory(CATEGORY_TOGRAVE)
 	e1:SetType(EFFECT_TYPE_SINGLE|EFFECT_TYPE_TRIGGER_F)
 	e1:SetCode(EVENT_SUMMON_SUCCESS)
