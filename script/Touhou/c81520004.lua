@@ -72,7 +72,7 @@ function s.plop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 
-function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+function s.selfdestg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(1-tp) and chkc:IsOnField() end
 	if chk==0 then return Duel.IsExistingTarget(nil,tp,0,LOCATION_ONFIELD,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
@@ -81,7 +81,7 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetPossibleOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,tp,LOCATION_EXTRA)
 end
 
-function s.desop(e,tp,eg,ep,ev,re,r,rp)
+function s.selfdesop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetTargetCards(e)
 	if #g>0 and Duel.Destroy(g,REASON_EFFECT)>0 then 
 		local c=e:GetHandler()
