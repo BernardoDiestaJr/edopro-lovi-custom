@@ -72,7 +72,7 @@ function s.effop(e,tp,eg,ep,ev,re,r,rp)
 		--Place 1 Synchro "Windrous" monster from your Extra Deck, GY or banishment in your Spell & Trap Zone as a face-up Continuous Trap, and if you do, send 1 Level 9 WIND monster from your Deck to the GY.
 		if ft<=0 then return end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
-		local sc=Duel.SelectMatchingCardtp,aux.NecroValleyFilter(s.plfilter),tp,LOCATION_EXTRA|LOCATION_GRAVE|LOCATION_REMOVED,0,1,1,nil):GetFirst()
+		local sc=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.plfilter),tp,LOCATION_EXTRA|LOCATION_GRAVE|LOCATION_REMOVED,0,1,1,nil):GetFirst()
 		if sc and Duel.MoveToField(sc,tp,tp,LOCATION_SZONE,POS_FACEUP,true) then
 			sc:RegisterFlagEffect(id,RESETS_STANDARD_PHASE_END,0,1)
 			--Treat as Continuous Trap
