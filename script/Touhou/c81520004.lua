@@ -5,10 +5,10 @@ function s.initial_effect(c)
 	c:SetUniqueOnField(1,0,id)
 	--Synchro Summon procedure: "Sanae, Windrous Fantasia Priestess" + 1+ Tuner Synchro Monsters
 	Synchro.AddProcedure(c,aux.FALSE,1,1,s.tunerfilter,1,99,aux.FilterSummonCode(81519989))	
-	--Destroy all monsters your opponent controls
+	--Set 1 "Spell/Trap that mentions "Sanae, Windrous Fantasia Priestess" from your Deck or GY
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
-	e1:SetCategory(CATEGORY_DESTROY)
+	e1:SetCategory(CATEGORY_SET)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetProperty(EFFECT_FLAG_DELAY)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
@@ -44,31 +44,54 @@ function s.tunerfilter(c,scard,sumtype,tp)
 	return c:IsType(TYPE_TUNER,scard,sumtype,tp) and c:IsType(TYPE_SYNCHRO) or c:IsHasEffect(EFFECT_CAN_BE_TUNER)
 end
 
+function s.setfilter(c)
+	return c:IsSpellTrap() and c:ListsCode(81519989) and c:IsSSetable()
+end
+
+function s.rescon(stzone_chk)
+	return function(sg,e,tp,mg)
+		return #sg==2 and (stzone_chk or sg:IsExists(Card.IsFieldSpell,1,nil)) and sg:IsExists(Card.IsSpell,1,nil) and sg:IsExists(Card.IsTrap,1,nil)
+	end
+end
+
 function s.pltg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local g=Duel.GetMatchingGroup(nil,tp,0,LOCATION_MZONE,nil)
-	if chk==0 then return #g>0 end
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,#g,tp,0)
+	if chk==0 then
+		local stzone_chk=Duel.GetLocationCount(tp,LOCATION_SZONE)>=2
+		local g=Duel.GetMatchingGroup(s.setfilter,tp,LOCATION_DECK|LOCATION_GRAVE,0,nil)
+		return #g>=2 and aux.SelectUnselectGroup(g,e,tp,2,2,s.rescon(stzone_chk),0)
+	end
 end
 
 function s.plop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(nil,tp,0,LOCATION_MZONE,nil)
-	if #g>0 and Duel.Destroy(g,REASON_EFFECT)>0
+	local stzone_chk=Duel.GetLocationCount(tp,LOCATION_SZONE)>=2
+	local g=Duel.GetMatchingGroup(s.setfilter,tp,LOCATION_DECK|LOCATION_GRAVE,0,nil)
+	local sg=aux.SelectUnselectGroup(g,e,tp,2,2,s.rescon(stzone_chk),1,tp,HINTMSG_SET)
+	if #sg==2 and Duel.SSet(tp,sg)>0
 		and not e:GetHandler():IsForbidden()
 		and Duel.GetLocationCount(tp,LOCATION_SZONE)>0
 		and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)		
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
 		local c=e:GetHandler()
 		if not c:IsRelateToEffect(e) or c:IsImmuneToEffect(e) then return end
 		if Duel.MoveToField(c,tp,tp,LOCATION_SZONE,POS_FACEUP,true) then
-			--Treated as a Continuous Spell
+			--Treated as a Continuous Trap
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 			e1:SetCode(EFFECT_CHANGE_TYPE)
-			e1:SetValue(TYPE_SPELL|TYPE_CONTINUOUS)
+			e1:SetValue(TYPE_TRAP|TYPE_CONTINUOUS)
 			e1:SetReset(RESET_EVENT|RESETS_STANDARD&~RESET_TURN_SET)
 			c:RegisterEffect(e1)
 		end
+	end	
+end
+
+function s.setop(e,tp,eg,ep,ev,re,r,rp)
+	local stzone_chk=Duel.GetLocationCount(tp,LOCATION_SZONE)>=2
+	local g=Duel.GetMatchingGroup(s.setfilter,tp,LOCATION_DECK,0,nil)
+	local sg=aux.SelectUnselectGroup(g,e,tp,2,2,s.rescon(stzone_chk),1,tp,HINTMSG_SET)
+	if #sg==2 then
+		Duel.SSet(tp,sg)
 	end
 end
 
