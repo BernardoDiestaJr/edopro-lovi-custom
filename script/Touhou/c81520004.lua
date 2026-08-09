@@ -1,4 +1,4 @@
---Windrous Divatar Yasaka no Mikoto
+--Windrous Divitant Yasaka no Mikoto
 local s,id=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
@@ -86,8 +86,7 @@ function s.selfdesop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) and Duel.SendtoDeck(c,nil,SEQ_DECKBOTTOM,REASON_EFFECT)>0
-		and c:IsLocation(LOCATION_EXTRA) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
-		and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+		and c:IsLocation(LOCATION_EXTRA) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)	
 		local g=Duel.GetTargetCards(e)
 		if #g>0 and Duel.Destroy(g,REASON_EFFECT)>0 then 	
