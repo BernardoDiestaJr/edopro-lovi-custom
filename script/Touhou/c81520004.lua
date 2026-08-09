@@ -73,6 +73,7 @@ function s.plop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.selfdestg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	local c=e:GetHandler()
 	if chkc then return chkc:IsControler(1-tp) and chkc:IsOnField() end
 	if chk==0 then return c:IsAbleToExtra() and Duel.IsExistingTarget(nil,tp,0,LOCATION_ONFIELD,1,nil) end
 	local g=Duel.SelectTarget(tp,nil,tp,0,LOCATION_ONFIELD,1,3,nil)
