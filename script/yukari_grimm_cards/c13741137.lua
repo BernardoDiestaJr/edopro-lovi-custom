@@ -23,6 +23,7 @@ function s.initial_effect(c)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetHintTiming(0,TIMING_END_PHASE)
 	e2:SetCountLimit(1,id)
+	e2:SetCondition(s.thcon)
 	e2:SetCost(Cost.SelfBanish)
 	e2:SetTarget(s.thtg)
 	e2:SetOperation(s.thop)
@@ -31,7 +32,7 @@ function s.initial_effect(c)
 end
 
 s.listed_series={0x41e}
-s.listed_names={id,13741132}
+s.listed_names={id,13741132,13741135}
 
 function s.negcon(e,tp,eg,ep,ev,re,r,rp)
 	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and ep==1-tp and Duel.IsChainNegatable(ev) and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,13741132),tp,LOCATION_ONFIELD,0,1,nil)
@@ -61,6 +62,10 @@ function s.negop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
 		Duel.Destroy(eg,REASON_EFFECT)
 	end
+end
+
+function s.thcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,13741135),tp,LOCATION_ONFIELD,0,1,nil)
 end
 
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
