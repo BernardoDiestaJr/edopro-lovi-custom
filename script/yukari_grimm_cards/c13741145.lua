@@ -113,7 +113,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		--Negate its effects
 		sc:NegateEffects(e:GetHandler(),nil,true)
 		--Its Level becomes 4
-		local e1=Effect.CreateEffect(sc)
+		local e1=Effect.CreateEffect(e:GetHandler(),nil,true)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_CHANGE_LEVEL)
 		e1:SetValue(4)
