@@ -47,7 +47,7 @@ function s.initial_effect(c)
 end
 
 s.listed_series={0x41e}
-s.listed_names={id,13741132,13741135}
+s.listed_names={id,13741132,13741135,13741143}
 
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsLinkSummoned()
@@ -112,18 +112,39 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.SpecialSummonStep(sc,0,tp,1-tp,false,false,POS_FACEUP) then
 		--Negate its effects
 		sc:NegateEffects(e:GetHandler(),nil,true)
-		--Its Level becomes 4
+		--Its name becomes "Grimm the Tragic Knight"
 		local e1=Effect.CreateEffect(e:GetHandler(),nil,true)
 		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_CHANGE_LEVEL)
-		e1:SetValue(4)
-		e1:SetReset(RESET_EVENT|RESETS_STANDARD_DISABLE)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e1:SetCode(EFFECT_CHANGE_CODE)
+		e1:SetValue(13741143)
+		e1:SetReset(RESET_EVENT|RESETS_STANDARD)
 		sc:RegisterEffect(e1)
-		--Its ATK becomes 2300
+		--Its Type becomes Warrior
 		local e2=e1:Clone()
-		e2:SetCode(EFFECT_SET_ATTACK)
-		e2:SetValue(2300)
+		e2:SetCode(EFFECT_CHANGE_RACE)
+		e2:SetValue(RACE_WARRIOR)
 		sc:RegisterEffect(e2)
+		--Its Attribute becomes Dark
+		local e3=e1:Clone()
+		e3:SetCode(EFFECT_CHANGE_ATTRIBUTE)
+		e3:SetValue(ATTRIBUTE_DARK)
+		sc:RegisterEffect(e3)
+		--Its Level becomes 4
+		local e4=e1:Clone()
+		e4:SetCode(EFFECT_CHANGE_LEVEL)
+		e4:SetValue(4)
+		sc:RegisterEffect(e4)
+		--Its ATK becomes 2300
+		local e5=e1:Clone()
+		e5:SetCode(EFFECT_SET_ATTACK)
+		e5:SetValue(2300)
+		sc:RegisterEffect(e5)
+		--Its ATK becomes 2300
+		local e6=e5:Clone()
+		e6:SetCode(EFFECT_SET_DEFENSE)
+		e6:SetValue(100)
+		sc:RegisterEffect(e6)
 	end
 	Duel.SpecialSummonComplete()
 	Duel.ShuffleHand(1-tp)
