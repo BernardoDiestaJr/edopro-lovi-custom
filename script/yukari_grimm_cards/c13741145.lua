@@ -101,8 +101,6 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) or Duel.Destroy(c,REASON_EFFECT)==0 then return end
 	local hg=Duel.GetFieldGroup(tp,0,LOCATION_HAND)
 	if #hg==0 then return end
 	Duel.ConfirmCards(tp,hg)
@@ -114,7 +112,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.BreakEffect()
 	if Duel.SpecialSummonStep(sc,0,tp,1-tp,false,false,POS_FACEUP) then
 		--Negate its effects
-		sc:NegateEffects(c)
+		sc:NegateEffects(e:GetHandler(),nil,true)
 	end
 	Duel.SpecialSummonComplete()
 	Duel.ShuffleHand(1-tp)
