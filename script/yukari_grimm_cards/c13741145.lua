@@ -76,8 +76,12 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 
+function s.spconfilter(c,e,tp)
+	return c:IsCode(13741132,13741135) and c:IsFaceup()
+end
+
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(aux.FaceupFilter(Card.IsCode,13741132,13741135),1,nil)
+	return Duel.IsExistingMatchingCard(s.spconfilter,tp,LOCATION_ONFIELD,0,1,nil)
 end
 
 function s.spcostfilter(c)
