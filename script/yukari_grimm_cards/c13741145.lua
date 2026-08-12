@@ -19,13 +19,13 @@ function s.initial_effect(c)
 	--Special Summon it to their field (its Level becomes 4, also its ATK becomes 2300 and its DEF becomes 100), but its effects are negated
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,2))
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_LVCHANGE+CATEGORY_ATKCHANGE+CATEGORY_DEFCHANGE)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetHintTiming(0,TIMING_MAIN_END|TIMINGS_CHECK_MONSTER_E)
 	e1:SetCountLimit(1,{id,1})
-
+	e1:SetCondition(s.spcon)
 	e1:SetCost(s.spcost)
 	e1:SetTarget(s.sptg)
 	e1:SetOperation(s.spop)
@@ -101,14 +101,34 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
 	local g=Duel.GetFieldGroup(tp,0,LOCATION_HAND)
 	if #g==0 then return end
 	local sc=g:RandomSelect(tp,1):GetFirst()
 	Duel.ConfirmCards(tp,sc)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and sc:IsCanBeSpecialSummoned(e,0,tp,false,false)
-		and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
-		Duel.SpecialSummon(sc,0,tp,tp,false,false,POS_FACEUP)
+		and Duel.SelectYesNo(tp,aux.Stringid(id,3)) and Duel.SpecialSummonStep(sc,0,tp,tp,false,false,POS_FACEUP)>0 then
+		--Negate its effects
+		sc:NegateEffects(c)
+		--Its Level becomes 4
+		local e1=Effect.CreateEffect(sc)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_CHANGE_LEVEL)
+		e1:SetValue(4)
+		e1:SetReset(RESET_EVENT|RESETS_STANDARD_DISABLE)
+		sc:RegisterEffect(e1)
+		--Its ATK becomes 2300
+		local e2=e1:Clone()
+		e2:SetCode(EFFECT_SET_ATTACK)
+		e2:SetValue(2300)
+		sc:RegisterEffect(e2)	
+		--Its DEF becomes 100
+		local e3=e2:Clone()
+		e3:SetCode(EFFECT_SET_DEFENSE)
+		e3:SetValue(100)
+		sc:RegisterEffect(e3)			
 	end
+	Duel.SpecialSummonComplete()
 	Duel.ShuffleHand(1-tp)
 end
 
