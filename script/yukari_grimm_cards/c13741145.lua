@@ -25,7 +25,7 @@ function s.initial_effect(c)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetHintTiming(0,TIMING_MAIN_END|TIMINGS_CHECK_MONSTER_E)
 	e1:SetCountLimit(1,{id,1})
-
+	e1:SetCondition(s.spcon)
 	e1:SetCost(s.spcost)
 	e1:SetTarget(s.sptg)
 	e1:SetOperation(s.spop)
@@ -76,12 +76,8 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 
-function s.spconfilter(c,e,tp)
-	return c:IsCode(13741132) and c:IsCode(13741135) and c:IsFaceup()
-end
-
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(s.spconfilter,tp,LOCATION_ONFIELD,0,1,nil)
+	return eg:IsExists(aux.FaceupFilter(Card.IsCode,13741132,13741135),1,nil)
 end
 
 function s.spcostfilter(c)
@@ -97,19 +93,16 @@ end
 
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)>0 end
-	Duel.SetPossibleOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
+	Duel.SetPossibleOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,1-tp,LOCATION_HAND)
 end
 
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
 	local g=Duel.GetFieldGroup(tp,0,LOCATION_HAND)
 	if #g==0 then return end
 	local sc=g:RandomSelect(tp,1):GetFirst()
 	Duel.ConfirmCards(tp,sc)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and sc:IsCanBeSpecialSummoned(e,0,tp,false,false)
-		and Duel.SelectYesNo(tp,aux.Stringid(id,3)) and Duel.SpecialSummonStep(sc,0,tp,tp,false,false,POS_FACEUP)>0 then
-		--Negate its effects
-		sc:NegateEffects(c)
+	if Duel.GetLocationCount(1-tp,LOCATION_MZONE)>0 and sc:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,1-tp)
+		and Duel.SelectYesNo(tp,aux.Stringid(id,3)) and Duel.SpecialSummonStep(sc,0,tp,1-tp,false,false,POS_FACEUP)>0 then
 		--Its Level becomes 4
 		local e1=Effect.CreateEffect(sc)
 		e1:SetType(EFFECT_TYPE_SINGLE)
