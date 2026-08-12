@@ -103,7 +103,6 @@ end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local hg=Duel.GetFieldGroup(tp,0,LOCATION_HAND)
 	if #hg==0 then return end
-	Duel.ConfirmCards(tp,hg)
 	local sg=hg:Filter(Card.IsCanBeSpecialSummoned,nil,e,0,tp,false,false,POS_FACEUP,1-tp)
 	if #sg==0 or Duel.GetLocationCount(1-tp,LOCATION_MZONE)==0 or not Duel.SelectYesNo(tp,aux.Stringid(id,3)) then return Duel.ShuffleHand(1-tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
@@ -113,6 +112,18 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.SpecialSummonStep(sc,0,tp,1-tp,false,false,POS_FACEUP) then
 		--Negate its effects
 		sc:NegateEffects(e:GetHandler(),nil,true)
+		--Its Level becomes 4
+		local e1=Effect.CreateEffect(sc)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_CHANGE_LEVEL)
+		e1:SetValue(4)
+		e1:SetReset(RESET_EVENT|RESETS_STANDARD_DISABLE)
+		sc:RegisterEffect(e1)
+		--Its ATK becomes 2300
+		local e2=e1:Clone()
+		e2:SetCode(EFFECT_SET_ATTACK)
+		e2:SetValue(2300)
+		sc:RegisterEffect(e2)
 	end
 	Duel.SpecialSummonComplete()
 	Duel.ShuffleHand(1-tp)
