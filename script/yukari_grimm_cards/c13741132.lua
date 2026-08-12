@@ -19,8 +19,7 @@ function s.initial_effect(c)
 	e2:SetTargetRange(LOCATION_MZONE,0)
 	e2:SetTarget(s.atktg)
 	e2:SetValue(function(e,c) return 300*Duel.GetMatchingGroup(Card.IsFaceup,e:GetHandlerPlayer(),LOCATION_MZONE,0,nil):GetBinClassCount(Card.GetRace) end)
-	e2:SetCondition(s.effcon)
-	e2:SetLabel(1)
+	e2:SetCondition(s.effcon(1))
 	c:RegisterEffect(e2)	
 	local e3=e2:Clone()
 	e3:SetCode(EFFECT_UPDATE_DEFENSE)
@@ -33,10 +32,9 @@ function s.initial_effect(c)
 	e4:SetRange(LOCATION_FZONE)
 	e4:SetCountLimit(1)
 	e4:SetCost(s.setcost)
-	e4:SetCondition(s.effcon)
+	e4:SetCondition(s.effcon(2))
 	e4:SetTarget(s.settg)
 	e4:SetOperation(s.setop)
-	e4:SetLabel(2)
 	c:RegisterEffect(e4)	
 	--Your opponent cannot target "Vicious Theatre" monsters you control with card effects
 	local e5=Effect.CreateEffect(c)
@@ -45,9 +43,9 @@ function s.initial_effect(c)
 	e5:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
 	e5:SetRange(LOCATION_FZONE)
 	e5:SetTargetRange(LOCATION_MZONE,0)
+	e5:SetCondition(s.effcon(3))
 	e5:SetTarget(function(e,c) return c:IsSetCard(0x41e) end)
 	e5:SetValue(aux.tgoval)
-	e5:SetLabel(3)
 	c:RegisterEffect(e5)
 end
 
@@ -72,19 +70,10 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 
-function s.confilter(c)
-	return c:IsSetCard(0x41e) and c:IsMonster()
-end
-
-function s.effcons(e,tp)
-	local g=Duel.GetMatchingGroup(s.confilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,nil)
-	return Duel.GetFieldGroupCount(e:GetHandlerPlayer(),LOCATION_MZONE,0)>=e:GetLabel()
-end
-
 function s.effcon(value)
 	return function(e)
 		local ct=Duel.GetMatchingGroupCount(aux.FaceupFilter(Card.IsSetCard,0x41e),e:GetHandlerPlayer(),LOCATION_MZONE,0,nil)
-		return (value>=1 and ct==value)
+		return (value==1 and ct>=value) or (value==2 and ct==value) or (value==3 and ct==value)
 	end
 end
 
