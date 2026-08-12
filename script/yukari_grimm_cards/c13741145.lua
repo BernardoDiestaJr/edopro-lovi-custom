@@ -101,29 +101,20 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetFieldGroup(tp,0,LOCATION_HAND)
-	if #g==0 then return end
-	local sc=g:RandomSelect(tp,1):GetFirst()
-	Duel.ConfirmCards(tp,sc)
-	if Duel.GetLocationCount(1-tp,LOCATION_MZONE)>0 and sc:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,1-tp)
-		and Duel.SelectYesNo(tp,aux.Stringid(id,3)) and Duel.SpecialSummonStep(sc,0,tp,1-tp,false,false,POS_FACEUP)>0 then
-		--Its Level becomes 4
-		local e1=Effect.CreateEffect(sc)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_CHANGE_LEVEL)
-		e1:SetValue(4)
-		e1:SetReset(RESET_EVENT|RESETS_STANDARD_DISABLE)
-		sc:RegisterEffect(e1)
-		--Its ATK becomes 2300
-		local e2=e1:Clone()
-		e2:SetCode(EFFECT_SET_ATTACK)
-		e2:SetValue(2300)
-		sc:RegisterEffect(e2)	
-		--Its DEF becomes 100
-		local e3=e2:Clone()
-		e3:SetCode(EFFECT_SET_DEFENSE)
-		e3:SetValue(100)
-		sc:RegisterEffect(e3)			
+	local c=e:GetHandler()
+	if not c:IsRelateToEffect(e) or Duel.Destroy(c,REASON_EFFECT)==0 then return end
+	local hg=Duel.GetFieldGroup(tp,0,LOCATION_HAND)
+	if #hg==0 then return end
+	Duel.ConfirmCards(tp,hg)
+	local sg=hg:Filter(Card.IsCanBeSpecialSummoned,nil,e,0,tp,false,false,POS_FACEUP,1-tp)
+	if #sg==0 or Duel.GetLocationCount(1-tp,LOCATION_MZONE)==0 or not Duel.SelectYesNo(tp,aux.Stringid(id,3)) then return Duel.ShuffleHand(1-tp) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local sc=sg:RandomSelect(tp,1):GetFirst()
+	if not sc then return end
+	Duel.BreakEffect()
+	if Duel.SpecialSummonStep(sc,0,tp,1-tp,false,false,POS_FACEUP) then
+		--Negate its effects
+		sc:NegateEffects(c)
 	end
 	Duel.SpecialSummonComplete()
 	Duel.ShuffleHand(1-tp)
