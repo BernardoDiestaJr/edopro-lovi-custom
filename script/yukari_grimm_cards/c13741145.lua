@@ -78,7 +78,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.spconfilter(c,e,tp)
-	return c:IsCode(13741132) and c:IsCode(13741135)
+	return c:IsCode(13741132) and c:IsCode(13741135) and c:IsFaceup()
 end
 
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
