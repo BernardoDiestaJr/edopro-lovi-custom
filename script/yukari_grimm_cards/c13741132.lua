@@ -84,7 +84,7 @@ end
 function s.effcon(value)
 	return function(e)
 		local ct=Duel.GetMatchingGroupCount(aux.FaceupFilter(Card.IsSetCard,0x41e),e:GetHandlerPlayer(),LOCATION_MZONE,0,nil)
-		return (value==1 and ct>=value)
+		return (value>=1 and ct==value)
 	end
 end
 
