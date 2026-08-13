@@ -84,7 +84,7 @@ end
 
 function s.xmatcon(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	return (c:IsSetCard(0x41e) and c:IsRankAbove(6) and c:IsXyzMonster()) and ep==1-tp and re:IsMonsterEffect()
+	return c:IsSetCard(0x41e) and (c:IsRankAbove(6) and c:IsXyzMonster()) and ep==1-tp and re:IsMonsterEffect()
 		and Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)==LOCATION_HAND and Duel.IsChainNegatable(ev)
 end
 
