@@ -12,7 +12,7 @@ function s.initial_effect(c)
 	e0:SetOperation(s.activate)
 	c:RegisterEffect(e0)
 	--A Rank 6 or higher "Vicious Theatre" Xyz Monster that has this card as material gains this effect
-	--● Negate the activation, then you can can banish (face-down) 1 card from your opponent's hand or field (the card in the hand is chosen at random)
+	--● Negate the activation, then you can banish (face-down) 1 card from your opponent's hand or field (the card in the hand is chosen at random)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,1))
 	e1:SetCategory(CATEGORY_NEGATE+CATEGORY_REMOVE)
@@ -84,7 +84,7 @@ end
 
 function s.xmatcon(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	return c:IsSetCard(0x41e) and (c:IsRankAbove(6) and c:IsXyzMonster()) and ep==1-tp and re:IsMonsterEffect()
+	return (c:IsRankAbove(6) and c:IsXyzMonster()) and ep==1-tp and re:IsMonsterEffect()
 		and Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)==LOCATION_HAND and Duel.IsChainNegatable(ev)
 end
 
