@@ -12,7 +12,7 @@ function s.initial_effect(c)
 	e0:SetRange(LOCATION_MZONE)
 	e0:SetValue(13741135)
 	c:RegisterEffect(e0)
-	--Search 1 "Goblin" monster
+	--Attach them to this card as materials
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
