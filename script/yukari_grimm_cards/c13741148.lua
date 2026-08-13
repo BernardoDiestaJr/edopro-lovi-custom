@@ -67,13 +67,15 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 	Duel.SpecialSummonComplete()
 	local sg=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.spfilter),tp,LOCATION_EXTRA|LOCATION_GRAVE,0,nil,e,tp)
-	if #sg==0 or not Duel.SelectYesNo(tp,aux.Stringid(id,1)) then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local ssg=sg:Select(tp,1,1,nil)
-	if #ssg>0 and Duel.IsExistingMatchingCard(s.xyzfilter,tp,LOCATION_MZONE,0,1,nil)  then
-		Duel.BreakEffect()
-		Duel.SpecialSummon(ssg,0,tp,tp,true,false,POS_FACEUP)
-	end	
+	if #sg>0 and Duel.IsExistingMatchingCard(s.xyzfilter,tp,LOCATION_MZONE,0,1,nil)
+		and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+		local ssg=sg:Select(tp,1,1,nil)
+		if #ssg>0 then
+			Duel.BreakEffect()
+			Duel.SpecialSummon(ssg,0,tp,tp,true,false,POS_FACEUP)
+		end	
+	end
 end
 
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
