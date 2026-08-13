@@ -86,9 +86,9 @@ end
 
 function s.tgop(e,tp,eg,ep,ev,re,r,rp)
 	local p=e:GetHandler():GetOwner()
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+	Duel.Hint(HINT_SELECTMSG,p,HINTMSG_TOGRAVE)
 	local g=Duel.SelectMatchingCard(p,s.tgfilter,p,LOCATION_DECK,0,1,1,nil)
 	if #g>0 then
-		Duel.SendtoGrave(g,p,REASON_EFFECT)
+		Duel.SendtoGrave(g,1-p,REASON_EFFECT)
 	end
 end
