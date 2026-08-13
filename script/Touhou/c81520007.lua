@@ -12,15 +12,15 @@ function s.initial_effect(c)
 	e0:SetTarget(s.selfsptg)
 	e0:SetOperation(s.selfspop)
 	c:RegisterEffect(e0)
-	--This card's owner of this card sends 1 "Sanae, Windrous Fantasia Priestess" or 1 card that mentions it from their Deck to their GY
+	--This card's owner adds 1 "Greatest ⑨-Faery Cirno" or 1 card that mentions it from their Deck to their hand
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,3))
-	e1:SetCategory(CATEGORY_TOGRAVE)
+	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e1:SetType(EFFECT_TYPE_SINGLE|EFFECT_TYPE_TRIGGER_F)
 	e1:SetCode(EVENT_SUMMON_SUCCESS)
 	e1:SetCountLimit(1,{id,1})
-	e1:SetTarget(s.tgtg)
-	e1:SetOperation(s.tgop)
+	e1:SetTarget(s.thtg)
+	e1:SetOperation(s.thop)
 	c:RegisterEffect(e1)
 	local e2=e1:Clone()
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
@@ -28,7 +28,7 @@ function s.initial_effect(c)
 end
 
 s.listed_series={0x2f1,0x2f2}
-s.listed_names={id,81519989}
+s.listed_names={id,81520015}
 
 function s.selfspconfilter(c)
 	return not (c:IsAttribute(ATTRIBUTE_WIND) and not c:IsCode(id) and c:IsFaceup())
@@ -75,20 +75,22 @@ function s.selfspop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 
-function s.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
+
+function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
-	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,e:GetHandler():GetOwner(),LOCATION_DECK)
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,e:GetHandler():GetOwner(),LOCATION_DECK)
 end
 
-function s.tgfilter(c)
-	return (c:IsCode(81519989) or c:ListsCode(81519989)) and c:IsAbleToGrave()
+function s.thfilter(c)
+	return (c:IsCode(81520015) or c:ListsCode(81520015)) and c:IsAbleToHand()
 end
 
-function s.tgop(e,tp,eg,ep,ev,re,r,rp)
+function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local p=e:GetHandler():GetOwner()
-	Duel.Hint(HINT_SELECTMSG,p,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(p,s.tgfilter,p,LOCATION_DECK,0,1,1,nil)
+	Duel.Hint(HINT_SELECTMSG,p,HINTMSG_ATOHAND)
+	local g=Duel.SelectMatchingCard(p,s.thfilter,p,LOCATION_DECK,0,1,1,nil)
 	if #g>0 then
-		Duel.SendtoGrave(g,1-p,REASON_EFFECT)
+		Duel.SendtoHand(g,p,REASON_EFFECT)
+		Duel.ConfirmCards(1-p,g)
 	end
 end
