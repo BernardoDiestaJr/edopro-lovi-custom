@@ -7,11 +7,11 @@ function s.initial_effect(c)
 	e0:SetType(EFFECT_TYPE_ACTIVATE)
 	e0:SetCode(EVENT_FREE_CHAIN)
 	e0:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e0:SetCountLimit(1,id,EFFECT_COUNT_CODE_OATH)
+	e0:SetCountLimit(1,{id,0})
 	e0:SetTarget(s.target)
 	e0:SetOperation(s.activate)
 	c:RegisterEffect(e0)
-	--A Rank 6 or higher "Vicious Theatre" Xyz Monster that has this card as material gains this effect
+	--A Rank 6 or higher Xyz Monster that has this card as material gains this effect
 	--● Negate the activation, then you can banish (face-down) 1 card from your opponent's hand or field (the card in the hand is chosen at random)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,1))
