@@ -93,13 +93,13 @@ function s.pltg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	local ft=Duel.GetLocationCount(tp,LOCATION_SZONE)
 	local g=Duel.GetMatchingGroup(s.plfilter,tp,LOCATION_EXTRA,0,nil)
-	if chk==0 then return ft>1 and aux.SelectUnselectGroup(g,e,tp,2,2,s.rescon,0) end
+	if chk==0 then return ft>1 and aux.SelectUnselectGroup(g,e,tp,2,2,aux.dncheck,0) end
 end
 
 function s.plop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_SZONE)<2 then return end
 	local g=Duel.GetMatchingGroup(s.plfilter,tp,LOCATION_EXTRA,0,nil)
-	local tg=aux.SelectUnselectGroup(g,e,tp,2,2,s.rescon,1,tp,HINTMSG_TOFIELD)
+	local tg=aux.SelectUnselectGroup(g,e,tp,2,2,aux.dncheck,1,tp,HINTMSG_TOFIELD)
 	if #tg==0 then return end
 	local c=e:GetHandler()
 	for tc in tg:Iter() do	
