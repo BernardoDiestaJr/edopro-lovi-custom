@@ -128,7 +128,7 @@ end
 
 function s.repop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-	local g=Duel.SelectMatchingCard(tp,s.attachfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,1,nil,c,tp):GetFirst()
+	local g=Duel.SelectMatchingCard(1-tp,s.attachfilter,1-tp,LOCATION_GRAVE,LOCATION_GRAVE,1,1,nil,c,1-tp):GetFirst()
 	if #g>0 then
 		Duel.HintSelection(g)
 		Duel.Overlay(c,g)
