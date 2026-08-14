@@ -17,17 +17,17 @@ function s.initial_effect(c)
 	e0b:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
 	e0b:SetValue(aux.tgoval)
 	c:RegisterEffect(e0b)
-	--You can target 2 of your non-Link "Fantasia" monsters from your GY; return them to your hand, and if you do, send 1 non-Illusion "Fantasia" monster from your Deck to the GY
+	--You can target 2 of your non-Link "Fantasia" monsters from your GY; return them to your hand
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
-	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_TOGRAVE)
+	e1:SetCategory(CATEGORY_TOHAND)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetProperty(EFFECT_FLAG_DELAY)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e1:SetCountLimit(1,{id,0})
 	e1:SetCondition(function(e) return e:GetHandler():IsLinkSummoned() end)
-	e1:SetTarget(s.thtgtg)
-	e1:SetOperation(s.thtgop)
+	e1:SetTarget(s.thtg)
+	e1:SetOperation(s.thop)
 	c:RegisterEffect(e1)
 	--If this card is sent to the GY as Link Material: You can discard 1 card; Special Summon this card, but banish it when it leaves the field
 	local e3=Effect.CreateEffect(c)
@@ -58,31 +58,20 @@ function s.thfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x1f8) and not c:IsType(TYPE_LINK) and c:IsMonster() 
 end
 
-function s.tgfilter(c)
-	return c:IsSetCard(0x1f8) and not c:IsRace(RACE_ILLUSION) and c:IsMonster() and c:IsAbleToHand()
-end
-
-function s.thtgtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE|LOCATION_REMOVED) and chkc:IsControler(tp) and s.thfilter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(s.thfilter,tp,LOCATION_GRAVE|LOCATION_REMOVED,0,1,nil)
-		and Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_DECK,0,1,nil) end
+	if chk==0 then return Duel.IsExistingTarget(s.thfilter,tp,LOCATION_GRAVE|LOCATION_REMOVED,0,1,nil) end
 	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectTarget(tp,s.thfilter,tp,LOCATION_GRAVE|LOCATION_REMOVED,0,1,2,nil)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
 end
 
-function s.thtgop(e,tp,eg,ep,ev,re,r,rp)
+function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetTargetCards(e)
 	if #g>0 then
 		Duel.SendtoHand(g,tp,REASON_EFFECT|REASON_RETURN)
 		Duel.ConfirmCards(1-tp,g)
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-		local sg=Duel.SelectMatchingCard(tp,s.tgfilter,tp,LOCATION_DECK,0,1,1,nil)
-		if #sg>0 then
-			Duel.SendtoGrave(sg,REASON_EFFECT)
-		end
 	end
 end
 
