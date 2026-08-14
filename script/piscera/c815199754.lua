@@ -27,11 +27,11 @@ function s.initial_effect(c)
 	e3:SetDescription(aux.Stringid(id,0))
 	e3:SetCategory(CATEGORY_DESTROY)
 	e3:SetProperty(EFFECT_FLAG_DELAY)
-	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e3:SetType(EFFECT_TYPE_TRIGGER_O+EFFECT_TYPE_FIELD)
 	e3:SetCode(EVENT_TO_HAND)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetCountLimit(1,id,EFFECT_COUNT_CODE_DUEL)
 	e3:SetCondition(s.descon)
+	e3:SetCost(s.descost)
 	e3:SetTarget(s.destg)
 	e3:SetOperation(s.desop)
 	c:RegisterEffect(e3)
@@ -42,11 +42,10 @@ function s.initial_effect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e4:SetProperty(EFFECT_FLAG_DELAY)
 	e4:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e4:SetCountLimit(1,id)
+	e4:SetCountLimit(2,id)
 	e4:SetTarget(s.gysptg)
 	e4:SetOperation(s.gyspop)
 	c:RegisterEffect(e4)
-
 
 end
 
@@ -68,18 +67,26 @@ function s.descon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter2,1,nil,1-tp)
 end
 
+function s.costfilter(c)
+	return c:IsRace(RACE_FISH) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
+end
+
+function s.descost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_MZONE|LOCATION_GRAVE,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g=Duel.SelectMatchingCard(tp,s.costfilter,tp,LOCATION_MZONE|LOCATION_GRAVE,0,1,1,nil)
+	Duel.Remove(g,POS_FACEUP,REASON_COST)
+end
+
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(nil,tp,0,LOCATION_HAND,1,nil) end
+	if chk==0 then return Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)>0 end
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,nil,1,1-tp,LOCATION_HAND)
 end
 
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectMatchingCard(tp,nil,tp,0,LOCATION_HAND,1,1,nil)
-	if #g>0 then
-		g:RandomSelect(tp,1)
-		Duel.Destroy(g,REASON_EFFECT)
-	end
+	local g=Duel.GetFieldGroup(tp,0,LOCATION_HAND)
+	local sg=g:RandomSelect(tp,1)
+	Duel.Destroy(sg,REASON_EFFECT)
 end
 
 function s.gyspfilter(c,e,tp)
