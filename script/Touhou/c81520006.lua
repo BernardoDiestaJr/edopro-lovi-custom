@@ -7,7 +7,7 @@ function s.initial_effect(c)
 	e0:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e0:SetType(EFFECT_TYPE_ACTIVATE)
 	e0:SetCode(EVENT_FREE_CHAIN)
-	e0:SetCountLimit(1,id)
+	e0:SetCountLimit(1,{id,0})
 	e0:SetCost(s.spcost)
 	e0:SetTarget(s.sptg)
 	e0:SetOperation(s.spop)
@@ -31,13 +31,13 @@ function s.initial_effect(c)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetValue(81519989)
 	c:RegisterEffect(e2)	
-	--Place 2 of your Synchro "Windrous" monsters from your Extra Deck in your Spell & Trap Zone as face-up Continuous Spells
+	--Place 2 of your Synchro "Windrous" monsters from your Extra Deck in your Spell & Trap Zone as face-up Continuous Traps
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,3))
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e3:SetProperty(EFFECT_FLAG_DELAY)
 	e3:SetCode(EVENT_REMOVE)
-	e3:SetCountLimit(1,id)
+	e3:SetCountLimit(1,{id,1})
 	e3:SetTarget(s.pltg)
 	e3:SetOperation(s.plop)
 	c:RegisterEffect(e3)	
@@ -93,23 +93,23 @@ function s.pltg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	local ft=Duel.GetLocationCount(tp,LOCATION_SZONE)
 	local g=Duel.GetMatchingGroup(s.plfilter,tp,LOCATION_EXTRA,0,nil)
-	if chk==0 then return ft>1 and aux.SelectUnselectGroup(g,e,tp,2,2,aux.dncheck,0) end
+	if chk==0 then return ft>1 and aux.SelectUnselectGroup(g,e,tp,2,2,s.rescon,0) end
 end
 
 function s.plop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_SZONE)<2 then return end
 	local g=Duel.GetMatchingGroup(s.plfilter,tp,LOCATION_EXTRA,0,nil)
-	local tg=aux.SelectUnselectGroup(g,e,tp,2,2,aux.dncheck,1,tp,HINTMSG_TOFIELD)
+	local tg=aux.SelectUnselectGroup(g,e,tp,2,2,s.rescon,1,tp,HINTMSG_TOFIELD)
 	if #tg==0 then return end
 	local c=e:GetHandler()
 	for tc in tg:Iter() do	
 		if Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true) then
-			--Treated as Continuous Spells
+			--Treated as a Continuous Trap
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 			e1:SetCode(EFFECT_CHANGE_TYPE)
-			e1:SetValue(TYPE_SPELL+TYPE_CONTINUOUS)
+			e1:SetValue(TYPE_TRAP+TYPE_CONTINUOUS)
 			e1:SetReset(RESET_EVENT|RESETS_STANDARD&~RESET_TURN_SET)
 			tc:RegisterEffect(e1)
 		end	
