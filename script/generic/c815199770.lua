@@ -14,14 +14,6 @@ function s.initial_effect(c)
 	e0:SetTarget(function(e,c) return c:IsRace(RACE_DINOSAUR) and c:IsLevelAbove(6) end)
 	e0:SetValue(function(e,_,rc) return rc==e:GetHandler() and 10 or 0 end)
 	c:RegisterEffect(e0)
-	--Unaffected by card effects, except Dinosaur monsters
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e1:SetCode(EFFECT_IMMUNE_EFFECT)
-	e1:SetRange(LOCATION_MZONE)
-	e1:SetValue(function(e,te) return not te:GetHandler():IsRace(RACE_DINOSAUR) end)
-	c:RegisterEffect(e1)
 	--Add up to 2 Dinosaur monsters with different names from your GY or banishment to your hand
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,0))
@@ -32,7 +24,7 @@ function s.initial_effect(c)
 	e2:SetTarget(s.thtg)
 	e2:SetOperation(s.thop)
 	c:RegisterEffect(e2)
-	--Special Summon 1 "Blue-Eyes White Dragon" or 1 Level 1 LIGHT Tuner from your GY
+	--Target 1 face-up card your opponent controls; banish it, face-down.
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,1))
 	e3:SetCategory(CATEGORY_REMOVE)
@@ -51,7 +43,7 @@ function s.initial_effect(c)
 	
 end
 
-s.listed_series={0x2f0}
+s.listed_series={}
 s.listed_names={id}
 
 function s.thfilter(c)
