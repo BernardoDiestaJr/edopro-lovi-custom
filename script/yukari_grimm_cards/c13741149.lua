@@ -43,7 +43,6 @@ function s.initial_effect(c)
 	--Detach all materials from this card, and if you do, the activated effect becomes "Add 1 card from your opponent's GY to their hand"
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(id,1))
-	e4:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e4:SetType(EFFECT_TYPE_QUICK_O)
 	e4:SetCode(EVENT_CHAINING)
 	e4:SetRange(LOCATION_MZONE)
@@ -107,12 +106,16 @@ function s.chcon(e,tp,eg,ep,ev,re,r,rp)
 	return rp==1-tp and (re:IsMonsterEffect() or (rc:IsNormalSpellTrap() and re:IsHasType(EFFECT_TYPE_ACTIVATE)))
 end
 
+function s.chfilter(c,e,tp)
+	return c:IsAttribute(ATTRIBUTE_LIGHT|ATTRIBUTE_DARK) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+end
+
 function s.chtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		local c=e:GetHandler()
 		local mat_ct=c:GetOverlayCount()
 		return mat_ct>0 and c:CheckRemoveOverlayCard(tp,mat_ct,REASON_EFFECT)
-			and Duel.IsExistingMatchingCard(Card.IsAbleToHand,tp,LOCATION_GRAVE,0,1,nil)
+			and Duel.IsExistingMatchingCard(s.chfilter,tp,LOCATION_GRAVE,0,1,nil)
 	end
 end
 
@@ -127,16 +130,10 @@ function s.chop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.repop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter),tp,LOCATION_GRAVE,LOCATION_GRAVE,1,1,nil,e,tp)
-		if #g>0 then
-			Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
-		end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+	local g=Duel.SelectMatchingCard(tp,s.chfilter,tp,0,LOCATION_GRAVE,1,1,nil)
+	if #g>0 then
+		Duel.HintSelection(g)
+		Duel.SendtoHand(g,nil,REASON_EFFECT)
 	end
-end
-
-function s.spfilter(c,e,tp)
-	return c:IsAttribute(ATTRIBUTE_LIGHT|ATTRIBUTE_DARK) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
