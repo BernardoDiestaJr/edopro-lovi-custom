@@ -112,8 +112,10 @@ function s.chtg(e,tp,eg,ep,ev,re,r,rp,chk)
 		local c=e:GetHandler()
 		local mat_ct=c:GetOverlayCount()
 		return mat_ct>0 and c:CheckRemoveOverlayCard(tp,mat_ct,REASON_EFFECT)
-			and Duel.IsExistingMatchingCard(s.attachfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,nil,e:GetHandler(),tp)
+			and Duel.IsExistingTarget(s.attachfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,nil,tp)
 	end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATTACH)
+	Duel.SelectTarget(tp,s.attachfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,1,nil,tp)
 end
 
 function s.chop(e,tp,eg,ep,ev,re,r,rp)
@@ -127,15 +129,22 @@ function s.chop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.repop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-	local g=Duel.SelectMatchingCard(1-tp,s.attachfilter,1-tp,LOCATION_GRAVE,LOCATION_GRAVE,1,1,nil,c,1-tp):GetFirst()
-	if #g>0 then
-		Duel.HintSelection(g)
-		Duel.Overlay(c,g)
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SELF)
+		local xyzc=Duel.SelectMatchingCard(tp,s.xyzfilter,tp,LOCATION_MZONE,0,1,1,tc,tc,tp):GetFirst()
+		if not xyzc then return end
+		Duel.HintSelection(xyzc)
+		if xyzc:IsImmuneToEffect(e) or tc:IsImmuneToEffect(e) then return end
+		Duel.Overlay(xyzc,tc,true)
 	end
 end
 
-
 function s.attachfilter(c,xyzc,tp)
-	return c:IsCanBeXyzMaterial(xyzc,tp,REASON_EFFECT)
+	return Duel.IsExistingMatchingCard(s.xyzfilter,tp,LOCATION_MZONE,0,1,c,c,tp)
 end
+
+function s.xyzfilter(c,mc,tp)
+	return c:IsSetCard(0x41e) and c:IsType(TYPE_XYZ) and c:IsFaceup() and mc:IsCanBeXyzMaterial(c,tp,REASON_EFFECT)
+end
+
