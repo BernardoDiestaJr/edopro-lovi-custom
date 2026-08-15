@@ -43,7 +43,7 @@ function s.initial_effect(c)
 	--Detach all materials from this card, and if you do, the activated effect becomes "Add 1 card from your opponent's GY to their hand"
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(id,1))
-	e4:SetCategory(CATEGORY_LEAVE_GRAVE)
+	e4:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e4:SetType(EFFECT_TYPE_QUICK_O)
 	e4:SetCode(EVENT_CHAINING)
 	e4:SetRange(LOCATION_MZONE)
@@ -112,10 +112,8 @@ function s.chtg(e,tp,eg,ep,ev,re,r,rp,chk)
 		local c=e:GetHandler()
 		local mat_ct=c:GetOverlayCount()
 		return mat_ct>0 and c:CheckRemoveOverlayCard(tp,mat_ct,REASON_EFFECT)
-			and Duel.IsExistingTarget(s.attachfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,nil,tp)
+			and Duel.IsExistingMatchingCard(Card.IsAbleToHand,tp,LOCATION_GRAVE,0,1,nil)
 	end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATTACH)
-	Duel.SelectTarget(tp,s.attachfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,1,nil,tp)
 end
 
 function s.chop(e,tp,eg,ep,ev,re,r,rp)
@@ -129,22 +127,16 @@ function s.chop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.repop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SELF)
-		local xyzc=Duel.SelectMatchingCard(tp,s.xyzfilter,tp,LOCATION_MZONE,0,1,1,tc,tc,tp):GetFirst()
-		if not xyzc then return end
-		Duel.HintSelection(xyzc)
-		if xyzc:IsImmuneToEffect(e) or tc:IsImmuneToEffect(e) then return end
-		Duel.Overlay(xyzc,tc,true)
+	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter),tp,LOCATION_GRAVE,LOCATION_GRAVE,1,1,nil,e,tp)
+		if #g>0 then
+			Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+		end
 	end
 end
 
-function s.attachfilter(c,xyzc,tp)
-	return Duel.IsExistingMatchingCard(s.xyzfilter,tp,LOCATION_MZONE,0,1,c,c,tp)
+function s.spfilter(c,e,tp)
+	return c:IsAttribute(ATTRIBUTE_LIGHT|ATTRIBUTE_DARK) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
-
-function s.xyzfilter(c,mc,tp)
-	return c:IsSetCard(0x41e) and c:IsType(TYPE_XYZ) and c:IsFaceup() and mc:IsCanBeXyzMaterial(c,tp,REASON_EFFECT)
-end
-
