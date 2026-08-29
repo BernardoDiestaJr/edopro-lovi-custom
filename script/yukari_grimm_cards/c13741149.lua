@@ -107,7 +107,7 @@ function s.chcon(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.chfilter(c,e,tp)
-	return c:IsAttribute(ATTRIBUTE_LIGHT|ATTRIBUTE_DARK) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsAttribute(ATTRIBUTE_LIGHT|ATTRIBUTE_DARK) and c:IsAbleToHand()
 end
 
 function s.chtg(e,tp,eg,ep,ev,re,r,rp,chk)
