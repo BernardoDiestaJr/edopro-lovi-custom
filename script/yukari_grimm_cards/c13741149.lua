@@ -115,7 +115,7 @@ function s.chtg(e,tp,eg,ep,ev,re,r,rp,chk)
 		local c=e:GetHandler()
 		local mat_ct=c:GetOverlayCount()
 		return mat_ct>0 and c:CheckRemoveOverlayCard(tp,mat_ct,REASON_EFFECT)
-			and Duel.IsExistingMatchingCard(s.chfilter,tp,LOCATION_GRAVE,0,1,nil)
+			and Duel.IsExistingMatchingCard(s.chfilter,tp,LOCATION_GRAVE|LOCATION_REMOVED,0,1,nil)
 	end
 end
 
@@ -131,7 +131,7 @@ end
 
 function s.repop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,s.chfilter,tp,0,LOCATION_GRAVE,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,s.chfilter,tp,0,LOCATION_GRAVE|LOCATION_REMOVED,1,1,nil)
 	if #g>0 then
 		Duel.HintSelection(g)
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
