@@ -1,7 +1,7 @@
 --Theatre of Darkness - Grand Guignol
 local s,id=GetID()
 function s.initial_effect(c)
-	--Add 1 "Vicious Theatre" card from your Deck to your hand.
+	--You can add 1 "Vicious Theatre" card or 1 "Grimm the Tragic Knight" from your Deck to your hand.
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
@@ -50,10 +50,10 @@ function s.initial_effect(c)
 end
 
 s.listed_series={0x41e}
-s.listed_names={id}
+s.listed_names={id,13741143}
 
 function s.thfilter(c)
-	return c:IsSetCard(0x41e) and c:IsAbleToHand()
+	return c:IsAbleToHand() and ((c:IsSetCard(0x41e)) or c:IsCode(13741143))
 end
 
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
