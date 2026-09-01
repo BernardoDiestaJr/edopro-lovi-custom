@@ -23,7 +23,7 @@ function s.initial_effect(c)
 	e1:SetTarget(s.selfsptg)
 	e1:SetOperation(s.selfspop)
 	c:RegisterEffect(e1)	
-	--Add 1 Level 3 "Vicious Theatre" monster from your Deck or GY to your hand, or if you control "Vicious Theatre Waxwork", you can Special Summon it instead
+	--Add 1 Level 3 "Vicious Theatre" monster from your Deck to your hand, or if you control "Vicious Theatre Waxwork", you can Special Summon it instead
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH+CATEGORY_SPECIAL_SUMMON)
@@ -79,16 +79,16 @@ end
 function s.thsptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then 
 	local sp_check=Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,13741135),tp,LOCATION_ONFIELD,0,1,nil)
-	return Duel.IsExistingMatchingCard(s.thspfilter,tp,LOCATION_DECK|LOCATION_GRAVE,0,1,nil,e,tp,sp_check) end
-	Duel.SetPossibleOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK|LOCATION_GRAVE)
-	Duel.SetPossibleOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK|LOCATION_GRAVE)
+	return Duel.IsExistingMatchingCard(s.thspfilter,tp,LOCATION_DECK,0,1,nil,e,tp,sp_check) end
+	Duel.SetPossibleOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
+	Duel.SetPossibleOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
 end
 
 function s.thspop(e,tp,eg,ep,ev,re,r,rp)
 	local sp_check=Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,13741135),tp,LOCATION_ONFIELD,0,1,nil)	
 	local desc=sp_check and aux.Stringid(id,2) or HINTMSG_ATOHAND	
 	Duel.Hint(HINT_SELECTMSG,tp,desc)
-	local sc=Duel.SelectMatchingCard(tp,s.thspfilter,tp,LOCATION_DECK|LOCATION_GRAVE,0,1,1,nil,e,tp,sp_check):GetFirst()
+	local sc=Duel.SelectMatchingCard(tp,s.thspfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp,sp_check):GetFirst()
 	if not sc then return end
 	if sp_check then
 		aux.ToHandOrElse(sc,tp,
