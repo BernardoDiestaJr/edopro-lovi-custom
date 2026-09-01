@@ -23,7 +23,7 @@ function s.initial_effect(c)
 	e1:SetTarget(s.selfsptg)
 	e1:SetOperation(s.selfspop)
 	c:RegisterEffect(e1)	
-	--Add 1 "Vicious Theatre" Spell/Trap from your Deck or GY to your hand, or if you control "Vicious Theatre Waxwork", you can Set it instead
+	--Add 1 "Vicious Theatre" Spell/Trap from your Deck to your hand, or if you control "Vicious Theatre Waxwork", you can Set it instead
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH+CATEGORY_SET)
@@ -79,15 +79,15 @@ end
 function s.thsettg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then 
 	local set_check=Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,13741135),tp,LOCATION_ONFIELD,0,1,nil)
-	return Duel.IsExistingMatchingCard(s.thsetfilter,tp,LOCATION_DECK|LOCATION_GRAVE,0,1,nil,e,tp,set_check) end
-	Duel.SetPossibleOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK|LOCATION_GRAVE)
+	return Duel.IsExistingMatchingCard(s.thsetfilter,tp,LOCATION_DECK,0,1,nil,e,tp,set_check) end
+	Duel.SetPossibleOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 
 function s.thsetop(e,tp,eg,ep,ev,re,r,rp)
 	local set_check=Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,13741135),tp,LOCATION_ONFIELD,0,1,nil)	
 	local desc=set_check and aux.Stringid(id,2) or HINTMSG_ATOHAND	
 	Duel.Hint(HINT_SELECTMSG,tp,desc)
-	local sc=Duel.SelectMatchingCard(tp,s.thsetfilter,tp,LOCATION_DECK|LOCATION_GRAVE,0,1,1,nil,e,tp,set_check):GetFirst()
+	local sc=Duel.SelectMatchingCard(tp,s.thsetfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp,set_check):GetFirst()
 	if not sc then return end
 	if set_check then
 		aux.ToHandOrElse(sc,tp,
