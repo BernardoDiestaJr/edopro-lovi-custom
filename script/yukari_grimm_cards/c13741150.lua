@@ -20,6 +20,7 @@ function s.initial_effect(c)
 	e1:SetRange(LOCATION_PZONE)
 	e1:SetCountLimit(1,{id,0})
 	e1:SetCondition(s.thcon)
+	e1:SetCost(Cost.PayLP(1000))
 	e1:SetTarget(s.thtg)
 	e1:SetOperation(s.thop)
 	c:RegisterEffect(e1)
@@ -45,6 +46,7 @@ function s.initial_effect(c)
 	local e4=e3:Clone()
 	e4:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e4)
+	
 	
 	
 end
