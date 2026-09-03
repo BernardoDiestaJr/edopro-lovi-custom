@@ -20,7 +20,7 @@ function s.initial_effect(c)
 	e2:SetDescription(aux.Stringid(id,0))
 	e2:SetCategory(CATEGORY_DICE+CATEGORY_SET+CATEGORY_DAMAGE)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e2:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
+	e2:SetProperty(EFFECT_FLAG_DELAY)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e2:SetCountLimit(1,id)
 	e2:SetCondition(function(e) return e:GetHandler():IsXyzSummoned() end)
@@ -45,27 +45,22 @@ function s.efftg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_DICE,nil,0,tp,1)
 end
 
+function s.setfilter(c)
+	return c:IsSetCard(0x41e) and c:IsSpellTrap() and c:IsSSetable()
+end
+
 function s.effop(e,tp,eg,ep,ev,re,r,rp)
 	local dice=Duel.TossDice(tp,1)
 	if dice>=1 and dice<=3 then
-		--● 1, 2 or 3: Set 1 "Vicious Theatre" Spell/Trap from your Deck. 
-		Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,3))
-		local sc=Duel.SelectMatchingCard(tp,nil,tp,0,LOCATION_MZONE,1,1,nil):GetFirst()
-		if not sc then return end
-		Duel.HintSelection(sc)
-		local b1=sc:IsAbleToChangeControler()
-		local b2=true
-		local op=Duel.SelectEffect(tp,
-			{b1,aux.Stringid(id,4)},
-			{b2,aux.Stringid(id,5)})
-		if op==1 then
-			Duel.GetControl(sc,tp)
-		elseif op==2 then
-			Duel.Destroy(sc,REASON_EFFECT)
+		--● 1, 2 or 3: Set 1 "Vicious Theatre" Spell/Trap from your Deck
+		Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,1))
+		local sg=Duel.SelectMatchingCard(tp,s.setfilter,tp,LOCATION_DECK,0,1,1,nil)
+		if #sg>0 then
+			Duel.SSet(tp,sg)
 		end
 	elseif dice==4 or dice==5 then
 		--● 4 or 5: Negate the effects of 1 face-up card on the field until the end of the next turn
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+		Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,2))
 		local g=Duel.SelectMatchingCard(tp,Card.IsFaceup,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
 		if #g>0 then
 			Duel.HintSelection(g)
@@ -86,6 +81,7 @@ function s.effop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	elseif dice==6 then
 		--● 6: Inflict 1500 Damage to your opponent
+		Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,3))
 		Duel.Damage(1-tp,1500,REASON_EFFECT)
 	end
 end
