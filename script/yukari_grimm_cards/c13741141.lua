@@ -84,4 +84,25 @@ function s.effop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,3))
 		Duel.Damage(1-tp,1500,REASON_EFFECT)
 	end
+	--For the rest of this turn, this card cannot attack, also you cannot Special Summon from the Extra Deck, except DARK or LIGHT monsters
+	local c=e:GetHandler()
+	--Cannot attack
+	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(3206)
+	e3:SetType(EFFECT_TYPE_SINGLE)
+	e3:SetCode(EFFECT_CANNOT_ATTACK)
+	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CLIENT_HINT)
+	e3:SetReset(RESETS_STANDARD_PHASE_END)
+	c:RegisterEffect(e3)	
+	local e4=Effect.CreateEffect(c)
+	e4:SetDescription(aux.Stringid(id,4))
+	e4:SetType(EFFECT_TYPE_FIELD)
+	e4:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
+	e4:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	e4:SetTargetRange(1,0)
+	e4:SetTarget(function(e,c) return c:IsLocation(LOCATION_EXTRA) and not (c:IsAttribute(ATTRIBUTE_LIGHT) or c:IsAttribute(ATTRIBUTE_DARK)) end)
+	e4:SetReset(RESET_PHASE|PHASE_END)
+	Duel.RegisterEffect(e4,tp)
+	--"Clock Lizard" check
+	aux.addTempLizardCheck(c,tp,function(e,c) return not (c:IsAttribute(ATTRIBUTE_LIGHT) or c:IsAttribute(ATTRIBUTE_DARK)) end)
 end
