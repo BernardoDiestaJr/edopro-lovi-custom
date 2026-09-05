@@ -87,7 +87,7 @@ function s.xyzop(e,tp,chk)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH+EFFECT_FLAG_CLIENT_HINT)
 	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
 	e1:SetTargetRange(1,0)
-	e1:SetTarget(function(e,c) return not ((not c:IsRace(RACE_WARRIOR) and c:IsSetCard(0x421)) or c:IsCode(13741143)) end)
+	e1:SetTarget(function(e,c) return not ((not c:IsRace(RACE_ZOMBIE) and c:IsSetCard(0x421)) or c:IsCode(13741143)) end)
 	e1:SetReset(RESET_PHASE|PHASE_END)
 	Duel.RegisterEffect(e1,tp)
 	return true
