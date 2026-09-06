@@ -80,7 +80,7 @@ end
 
 function s.xyzop(e,tp,chk)
 	if chk==0 then return Duel.HasFlagEffect(1-tp,id+1) end
-	--Cannot Special Summon for the rest of this turn, except non-Warrior "Black Trial" monsters and "Grimm the Tragic Knight"
+	--Cannot Special Summon for the rest of this turn, except non-Zombie "Black Trial" monsters and "Grimm the Tragic Knight"
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetDescription(aux.Stringid(id,4))
 	e1:SetType(EFFECT_TYPE_FIELD)
