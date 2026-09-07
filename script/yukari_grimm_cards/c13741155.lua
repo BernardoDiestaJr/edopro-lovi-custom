@@ -36,7 +36,7 @@ function s.initial_effect(c)
 	--Destroy cards on the field equal to the number of materials detached
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(id,2))
-	e4:SetCategory(CATEGORY_DESTROY)
+	e4:SetCategory(CATEGORY_DESTROY+CATEGORY_TODECK)
 	e4:SetType(EFFECT_TYPE_IGNITION)
 	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e4:SetRange(LOCATION_MZONE)
@@ -59,7 +59,7 @@ function s.initial_effect(c)
 end
 
 s.listed_series={0x421}
-s.listed_names={id,13741143}
+s.listed_names={id}
 
 function s.checkop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=eg:GetFirst()
