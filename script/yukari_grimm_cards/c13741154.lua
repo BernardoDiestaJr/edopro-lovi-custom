@@ -14,7 +14,7 @@ function s.initial_effect(c)
 	e0:SetRange(LOCATION_GRAVE)
 	e0:SetCountLimit(1,{id,1})
 	e0:SetCondition(s.spcon)
-	e0:SetCost(s.spcost)
+
 	e0:SetTarget(s.sptg)
 	e0:SetOperation(s.spop)
 	c:RegisterEffect(e0)
