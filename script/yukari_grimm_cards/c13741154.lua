@@ -93,24 +93,13 @@ function s.xyzop(e,tp,chk)
 	return true
 end
 
-function s.spcostfilter(c)
-	return c:IsMonster() and c:IsAttribute(ATTRIBUTE_DARK)
-end
-
-function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckReleaseGroupCost(tp,s.spcostfilter,1,true,aux.ReleaseCheckTarget,nil,tg) end
-	local g=Duel.SelectReleaseGroupCost(tp,s.spcostfilter,1,99,true,aux.ReleaseCheckTarget,nil,tg)
-	e:SetLabel(#g)
-	Duel.Release(g,REASON_COST)
-end
-
-function s.cfilter(c,tp,rp)
+function s.spconfilter(c,tp,rp)
 	return c:IsPreviousPosition(POS_FACEUP) and c:IsPreviousControler(tp) and c:GetPreviousTypeOnField()&TYPE_XYZ~=0 and c:IsPreviousLocation(LOCATION_MZONE)
 		and c:IsPreviousSetCard(0x421) and (c:IsReason(REASON_BATTLE) or (rp==1-tp and c:IsReason(REASON_EFFECT)))
 end
 
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return not eg:IsContains(e:GetHandler()) and eg:IsExists(s.cfilter,1,nil,tp,rp)
+	return not eg:IsContains(e:GetHandler()) and eg:IsExists(s.spconfilter,1,nil,tp,rp)
 end
 
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
