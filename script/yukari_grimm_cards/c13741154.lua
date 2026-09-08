@@ -12,28 +12,28 @@ function s.initial_effect(c)
 	e0:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
 	e0:SetCode(EVENT_LEAVE_FIELD)
 	e0:SetRange(LOCATION_GRAVE)
-	e0:SetCountLimit(1,{id,1})
+	e0:SetCountLimit(1,{id,0})
 	e0:SetCondition(s.spcon)
-
 	e0:SetTarget(s.sptg)
 	e0:SetOperation(s.spop)
 	c:RegisterEffect(e0)
 	--Gains these effects while in the Extra Monster Zone
-	--● If this card attacks a Defense Position monster, inflict piercing battle damage to your opponent
+	--If this card in the Extra Monster Zone attacks a Defense Position monster, inflict piercing battle damage to your opponent
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_PIERCE)
 	e1:SetRange(LOCATION_EMZONE)
 	c:RegisterEffect(e1)
-	--● Unaffected by your opponent's activated effects, unless they target this card
+	--While this Xyz Summoned card is in the Extra Monster Zone, it is unaffected by your opponent's activated effects, unless they target this card
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
 	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e2:SetCode(EFFECT_IMMUNE_EFFECT)
 	e2:SetRange(LOCATION_EMZONE)
+	e2:SetCondition(s.indescon)
 	e2:SetValue(s.immval)
 	c:RegisterEffect(e2)
-	--● Once per turn (Quick Effect): You can detach 1 material from this card, then target 1 card your opponent controls; banish it face-down
+	--If this card is in the Extra Monster Zone (Quick Effect): You can detach 1 material from this card, then target 1 card your opponent controls; banish it face-down
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,2))
 	e3:SetCategory(CATEGORY_REMOVE)
@@ -41,7 +41,7 @@ function s.initial_effect(c)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e3:SetCode(EVENT_FREE_CHAIN)
 	e3:SetRange(LOCATION_EMZONE)
-	e3:SetCountLimit(1)
+	e3:SetCountLimit(1,{id,1})
 	e3:SetCost(Cost.DetachFromSelf(1))
 	e3:SetTarget(s.rmvtg)
 	e3:SetOperation(s.rmvop)
@@ -133,6 +133,10 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 			sc:NegateEffects(e:GetHandler())
 		end
 	end
+end
+
+function s.indescon(e)
+	return e:GetHandler():IsXyzSummoned()
 end
 
 function s.immval(e,re)
