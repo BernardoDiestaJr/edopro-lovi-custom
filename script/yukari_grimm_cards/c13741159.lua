@@ -60,14 +60,11 @@ function s.sdcon(e)
 end
 
 function s.spconfilter(c)
-	return c:IsFacedown() or not c:IsAttribute(ATTRIBUTE_DARK)
+	return not (c:IsAttribute(ATTRIBUTE_DARK) and c:IsFaceup())
 end
 
-function s.spcon(e,c,minc,zone)
-	if c==nil then return true end
-	local tp=c:GetControler()
-	return minc==0 and c:IsLevelAbove(5) and Duel.GetLocationCount(tp,LOCATION_MZONE,tp,LOCATION_REASON_TOFIELD,zone)>0
-		and (Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0 or not Duel.IsExistingMatchingCard(s.spconfilter,tp,LOCATION_MZONE,0,1,nil))
+function s.spcon(e,tp,eg,ep,ev,re,r,rp)
+	return not Duel.IsExistingMatchingCard(s.spconfilter,tp,LOCATION_MZONE,0,1,nil)
 end
 
 function s.spfilter(c,e,tp)
