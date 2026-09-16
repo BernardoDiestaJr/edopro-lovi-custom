@@ -108,9 +108,9 @@ function s.rmvtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 
 function s.rmvop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
-		Duel.Remove(tc,POS_FACEDOWN,REASON_EFFECT)
+	local g=Duel.GetTargetCards(e)
+	if #g>0 then
+		Duel.Remove(g,POS_FACEDOWN,REASON_EFFECT)
 	end
 end
 
