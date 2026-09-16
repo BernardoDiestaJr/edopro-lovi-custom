@@ -4,19 +4,6 @@ function s.initial_effect(c)
 	c:EnableReviveLimit()
 	--Xyz Summon Procedure: 2 Level 12 DARK monsters
 	Xyz.AddProcedure(c,aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_DARK),12,2,s.xyzfilter,aux.Stringid(id,0),2,s.xyzop)
-	--Special Summon this card
-	local e0=Effect.CreateEffect(c)
-	e0:SetDescription(aux.Stringid(id,1))
-	e0:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_DISABLE)
-	e0:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e0:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
-	e0:SetCode(EVENT_LEAVE_FIELD)
-	e0:SetRange(LOCATION_GRAVE)
-	e0:SetCountLimit(1,{id,0})
-	e0:SetCondition(s.spcon)
-	e0:SetTarget(s.sptg)
-	e0:SetOperation(s.spop)
-	c:RegisterEffect(e0)
 	--Gains these effects while in the Extra Monster Zone
 	--If this card in the Extra Monster Zone attacks a Defense Position monster, inflict piercing battle damage to your opponent
 	local e1=Effect.CreateEffect(c)
@@ -33,20 +20,27 @@ function s.initial_effect(c)
 	e2:SetCondition(s.indescon)
 	e2:SetValue(s.immval)
 	c:RegisterEffect(e2)
-	--If this card is in the Extra Monster Zone (Quick Effect): You can detach 1 material from this card, then target 1 card your opponent controls; banish it face-down
+	--Any battle damage your opponent takes from battles involving this card is doubled
 	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(id,2))
-	e3:SetCategory(CATEGORY_REMOVE)
-	e3:SetType(EFFECT_TYPE_QUICK_O)
-	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e3:SetCode(EVENT_FREE_CHAIN)
+	e3:SetType(EFFECT_TYPE_SINGLE)
+	e3:SetCode(EFFECT_CHANGE_BATTLE_DAMAGE)
 	e3:SetRange(LOCATION_EMZONE)
-	e3:SetCountLimit(1,{id,1})
-	e3:SetCost(Cost.DetachFromSelf(1))
-	e3:SetTarget(s.rmvtg)
-	e3:SetOperation(s.rmvop)
-	e3:SetHintTiming(0,TIMING_STANDBY_PHASE|TIMING_MAIN_END|TIMINGS_CHECK_MONSTER_E)
-	c:RegisterEffect(e3)	
+	e3:SetValue(aux.ChangeBattleDamage(1,DOUBLE_DAMAGE))
+	c:RegisterEffect(e3)
+	--If this card is in the Extra Monster Zone (Quick Effect): You can detach 1 material from this card, then target up to 3 card your opponent controls; banish them face-down
+	local e4=Effect.CreateEffect(c)
+	e4:SetDescription(aux.Stringid(id,2))
+	e4:SetCategory(CATEGORY_REMOVE)
+	e4:SetType(EFFECT_TYPE_QUICK_O)
+	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e4:SetCode(EVENT_FREE_CHAIN)
+	e4:SetRange(LOCATION_EMZONE)
+	e4:SetCountLimit(1,{id,1})
+	e4:SetCost(Cost.DetachFromSelf(1))
+	e4:SetTarget(s.rmvtg)
+	e4:SetOperation(s.rmvop)
+	e4:SetHintTiming(0,TIMING_STANDBY_PHASE|TIMING_MAIN_END|TIMINGS_CHECK_MONSTER_E)
+	c:RegisterEffect(e4)	
 	--Count summons
 	aux.GlobalCheck(s,function()
 		local ge1=Effect.CreateEffect(c)
@@ -82,7 +76,7 @@ function s.xyzop(e,tp,chk)
 	if chk==0 then return Duel.HasFlagEffect(1-tp,id+1) end
 	--Cannot Special Summon for the rest of this turn, except non-Zombie "Black Trial" monsters and "Grimm the Tragic Knight"
 	local e1=Effect.CreateEffect(e:GetHandler())
-	e1:SetDescription(aux.Stringid(id,4))
+	e1:SetDescription(aux.Stringid(id,1))
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH+EFFECT_FLAG_CLIENT_HINT)
 	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
@@ -91,37 +85,6 @@ function s.xyzop(e,tp,chk)
 	e1:SetReset(RESET_PHASE|PHASE_END)
 	Duel.RegisterEffect(e1,tp)
 	return true
-end
-
-function s.spconfilter(c,tp,rp)
-	return c:IsPreviousPosition(POS_FACEUP) and c:IsPreviousControler(tp) and c:GetPreviousTypeOnField()&TYPE_XYZ~=0 and c:IsPreviousLocation(LOCATION_MZONE)
-		and c:IsPreviousSetCard(0x421) and (c:IsReason(REASON_BATTLE) or (rp==1-tp and c:IsReason(REASON_EFFECT)))
-end
-
-function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return not eg:IsContains(e:GetHandler()) and eg:IsExists(s.spconfilter,1,nil,tp,rp)
-end
-
-function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local c=e:GetHandler()
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
-	Duel.SetPossibleOperationInfo(0,CATEGORY_DISABLE,nil,1,1-tp,LOCATION_MZONE)
-end
-
-function s.spop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)>0 then
-		local ng=Duel.GetMatchingGroup(Card.IsNegatableMonster,tp,0,LOCATION_MZONE,nil)
-		if #ng==0 or not Duel.SelectYesNo(tp,aux.Stringid(id,3)) then return end
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_NEGATE)
-		local sc=ng:Select(tp,1,1,nil):GetFirst()
-		if sc then
-			Duel.HintSelection(sc)
-			sc:NegateEffects(e:GetHandler())
-		end
-	end
 end
 
 function s.indescon(e)
@@ -140,7 +103,7 @@ function s.rmvtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) and chkc:IsAbleToRemove() end
 	if chk==0 then return Duel.IsExistingTarget(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectTarget(tp,Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,1,1,nil)
+	local g=Duel.SelectTarget(tp,Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,1,3,nil)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,tp,0)
 end
 
