@@ -15,7 +15,7 @@ function s.initial_effect(c)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
-	--You can banish this card from your GY; Reveal 1 DARK Ritual Monster in your Deck, and for every 7 Levels it has (round down), banish (face-down) 1 non-Ritual "Black Trial" monster or 1 "Grimm the Tragic Knight" from your hand, Deck, and/or field (if face-down, reveal it), then Special Summon that revealed monster. (This is treated as a Ritual Summon.)
+	--You can banish this card from your GY; Reveal 1 DARK Ritual Monster in your Deck, and for every 7 Levels it has (round down), banish (face-down) 1 "Black Trial" card from your hand, Deck, and/or field (if face-down, reveal it), then Special Summon that revealed monster. (This is treated as a Ritual Summon.)
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,0))
 	e2:SetCategory(CATEGORY_REMOVE+CATEGORY_SPECIAL_SUMMON)
@@ -78,7 +78,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.matfilter(c)
-	return (c:IsSetCard(0x421) and c:IsMonster() and not c:IsType(TYPE_RITUAL,lc,st,tp) or c:IsCode(13741143)) and c:IsAbleToRemove()
+	return (c:IsCode(13741143) or c:ListsCode(13741143)) and c:IsAbleToRemove()
 end
 
 function s.spfilter(c,e,tp,lv,g)
