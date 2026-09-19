@@ -78,7 +78,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.matfilter(c)
-	return (c:IsSetCard(0x421) and c:IsMonster() and not not c:IsType(TYPE_RITUAL,lc,st,tp) or c:IsCode(13741143)) and c:IsAbleToRemove()
+	return (c:IsSetCard(0x421) and c:IsMonster() and not c:IsType(TYPE_RITUAL,lc,st,tp) or c:IsCode(13741143)) and c:IsAbleToRemove()
 end
 
 function s.spfilter(c,e,tp,lv,g)
