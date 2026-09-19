@@ -15,7 +15,7 @@ function s.initial_effect(c)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
-	--You can banish this card from your GY; Reveal 1 DARK Ritual Monster in your Deck, and for every 4 Levels it has (round down), banish (face-down) 1 "Black Trial" card from your hand, Deck, and/or field (if face-down, reveal it), then Special Summon that revealed monster. (This is treated as a Ritual Summon.)
+	--You can banish this card from your GY; Reveal 1 DARK Ritual Monster in your Deck, and for every 7 Levels it has (round down), banish (face-down) 1 non-Ritual "Black Trial" monster or 1 "Grimm the Tragic Knight" from your hand, Deck, and/or field (if face-down, reveal it), then Special Summon that revealed monster. (This is treated as a Ritual Summon.)
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,0))
 	e2:SetCategory(CATEGORY_REMOVE+CATEGORY_SPECIAL_SUMMON)
@@ -32,7 +32,7 @@ function s.initial_effect(c)
 end
 
 s.listed_series={0x421}
-s.listed_names={id}
+s.listed_names={id,13741143}
 
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetDecktopGroup(tp,3)
@@ -78,12 +78,12 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.matfilter(c)
-	return c:IsSetCard(0x421) and c:IsAbleToRemove()
+	return (c:IsSetCard(0x421) and c:IsMonster() and not not c:IsType(TYPE_RITUAL,lc,st,tp) or c:IsCode(13741143)) and c:IsAbleToRemove()
 end
 
 function s.spfilter(c,e,tp,lv,g)
 	local pg=aux.GetMustBeMaterialGroup(tp,Group.CreateGroup(),tp,c,nil,REASON_RITUAL)
-	return #pg<=0 and c:IsAttribute(ATTRIBUTE_DARK) and c:IsRitualMonster() and c:IsLevelAbove(2) and c:IsLevelBelow(lv) and not c:IsPublic()
+	return #pg<=0 and c:IsAttribute(ATTRIBUTE_DARK) and c:IsRitualMonster() and c:IsLevelAbove(7) and c:IsLevelBelow(lv) and not c:IsPublic()
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,true,false,POS_FACEUP)
 end
 
@@ -91,7 +91,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		local g=Duel.GetMatchingGroup(s.matfilter,tp,LOCATION_ONFIELD|LOCATION_DECK|LOCATION_HAND,0,nil)
 		local ct=#g
-		return ct>0 and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp,ct*2+1,g)
+		return ct>0 and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp,ct*7+6,g)
 		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 	end
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,tp,LOCATION_ONFIELD|LOCATION_DECK|LOCATION_HAND)
@@ -109,10 +109,10 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local sg=Duel.GetMatchingGroup(s.matfilter,tp,LOCATION_ONFIELD|LOCATION_DECK|LOCATION_HAND,0,nil)
 	if #sg<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local tc=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp,#sg*2+1,sg):GetFirst()
+	local tc=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp,#sg*7+6,sg):GetFirst()
 	if not tc then return end
 	Duel.ConfirmCards(1-tp,tc)
-	local ct=tc:GetLevel()//2
+	local ct=tc:GetLevel()//7
 	local ssg=aux.SelectUnselectGroup(sg,e,tp,ct,ct,s.rescon(tc),1,tp,HINTMSG_REMOVE)
 	if #ssg==0 then return end
 	local fdg=ssg:Filter(aux.AND(Card.IsFacedown,Card.IsOnField),nil)
