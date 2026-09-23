@@ -42,7 +42,7 @@ function s.condition(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	local g=Duel.GetMatchingGroup(nil,tp,0,LOCATION_MZONE,nil)
+	local g=Duel.GetMatchingGroup(nil,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	if chk==0 then return not Duel.HasFlagEffect(tp,id) and #g>0 end
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,#g,tp,0)
 	Duel.SetPossibleOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
