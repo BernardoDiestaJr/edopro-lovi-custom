@@ -82,6 +82,7 @@ function s.xmatop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetReset(RESETS_STANDARD_PHASE_END)
 		c:RegisterEffect(e1)
 	end
+	c:RegisterFlagEffect(id,RESET_EVENT|RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,1))
 end
 
 function s.efilter(e,re)
@@ -97,4 +98,5 @@ function s.synchop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetValue(2)
 	e1:SetReset(RESET_EVENT|RESETS_STANDARD)
 	rc:RegisterEffect(e1)	
+	rc:RegisterFlagEffect(id,RESET_EVENT|RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,2))
 end
