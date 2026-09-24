@@ -35,8 +35,6 @@ function s.initial_effect(c)
 	e3:SetCondition(function(e,tp,eg,ep,ev,re,r,rp) return (r&REASON_SYNCHRO)==REASON_SYNCHRO and e:GetHandler():GetReasonCard():IsSetCard(0x41f) end)
 	e3:SetOperation(s.synchop)
 	c:RegisterEffect(e3)
-
-	
 end
 
 s.listed_series={0x41e,0x41f,0x420}
@@ -90,7 +88,7 @@ function s.efilter(e,re)
 	return re:IsMonsterEffect()
 end
 
-function s.effop(e,tp,eg,ep,ev,re,r,rp)
+function s.synchop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local rc=c:GetReasonCard()
 	local e1=Effect.CreateEffect(rc)
