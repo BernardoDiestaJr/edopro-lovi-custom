@@ -25,6 +25,17 @@ function s.initial_effect(c)
 	e2:SetCondition(s.xmatcon)
 	e2:SetOperation(s.xmatop)
 	c:RegisterEffect(e2)	
+	--A "Crawling Chaos" monster that was Synchro Summoned using this card gains this effect
+	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(id,2))
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e3:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
+	e3:SetCode(EVENT_BE_MATERIAL)
+	e3:SetCountLimit(1,{id,2})
+	e3:SetCondition(function(e,tp,eg,ep,ev,re,r,rp) return (r&REASON_SYNCHRO)==REASON_SYNCHRO and e:GetHandler():GetReasonCard():IsSetCard(0x41f) end)
+	e3:SetOperation(s.synchop)
+	c:RegisterEffect(e3)
+
 	
 end
 
@@ -77,4 +88,15 @@ end
 
 function s.efilter(e,re)
 	return re:IsMonsterEffect()
+end
+
+function s.effop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local rc=c:GetReasonCard()
+	local e1=Effect.CreateEffect(rc)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetCode(EFFECT_EXTRA_ATTACK)
+	e1:SetValue(2)
+	e1:SetReset(RESET_EVENT|RESETS_STANDARD)
+	rc:RegisterEffect(e1)	
 end
