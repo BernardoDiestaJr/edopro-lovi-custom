@@ -1,7 +1,6 @@
 --Malevolent Matrimony
 local s,id=GetID()
 function s.initial_effect(c)
-	c:EnableCounterPermit(0x118a)
 	--Add 1 Fairy "Malevolent" monster from your Deck to your hand, then you can count the number of "Crawling Chaos" and "Malevolent" cards you control and/or have in your GY or banishment, and place that many Black Soul Counters among card(s) you control that you can place a Black Soul Counter on
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
