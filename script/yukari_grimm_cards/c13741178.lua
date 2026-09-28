@@ -64,7 +64,7 @@ function s.thop1(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.thfilter2(c)
-	return (c:IsCode(13741143) or c:ListsCode(13741143)) and c:IsFaceup() and c:IsAbleToHand()
+	return (c:IsCode(13741143) or c:ListsCode(13741143) and c:IsMonster()) and c:IsFaceup() and c:IsAbleToHand()
 end
 
 function s.thtg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
