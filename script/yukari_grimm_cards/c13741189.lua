@@ -17,7 +17,7 @@ function s.initial_effect(c)
 	local e0b=e0a:Clone()
 	e0b:SetCode(EFFECT_SET_BASE_DEFENSE)
 	c:RegisterEffect(e0b)	
-	--You can remove 10 Black Soul Counters from your field; draw 1 card, then if you control 2 or more Fairy "Malevolent" monsters with different names, draw 2 additional cards
+	--You can remove 10 Black Soul Counters from your field; draw 2 card, then if you control 2 or more Fairy "Malevolent" monsters with different names, draw 1 additional card
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_DRAW+CATEGORY_TODECK)
@@ -125,11 +125,15 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end	
 end
 
+function s.tdfilter(c)
+	return c:IsMonster() and c:IsAbleToDeck()
+end
+
 function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsMonster() and chkc:IsAbleToDeck() end
-	if chk==0 then return Duel.IsExistingTarget(aux.AND(Card.IsMonster,Card.IsAbleToDeck),tp,LOCATION_GRAVE,LOCATION_GRAVE,1,nil) end
+	if chk==0 then return Duel.IsExistingTarget(s.tdfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g=Duel.SelectTarget(tp,aux.AND(Card.IsMonster,Card.IsAbleToDeck),tp,LOCATION_GRAVE,LOCATION_GRAVE,1,3,nil)
+	local g=Duel.SelectTarget(tp,s.tdfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,3,nil)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,tp,0)
 end
 
